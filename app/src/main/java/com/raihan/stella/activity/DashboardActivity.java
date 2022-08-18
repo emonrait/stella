@@ -135,7 +135,7 @@ public class DashboardActivity extends AutoLogout {
             updateUser();
             menuChange();
             totalBalance();
-            //menuView();
+            menuView();
 
         }
 
