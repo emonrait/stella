@@ -384,10 +384,8 @@ public class ProductMaster extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot item : dataSnapshot.getChildren()) {
-                    if (!item.child("id").getValue().equals(id_value.getSelectedItem().toString())) {
                         String id = "" + item.child("id").getValue();
                         spinerList.add(id);
-                    }
 
                 }
                 adapter = new ArrayAdapter<String>(ProductMaster.this, android.R.layout.simple_spinner_dropdown_item, spinerList);
