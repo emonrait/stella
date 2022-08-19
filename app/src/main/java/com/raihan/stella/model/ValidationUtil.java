@@ -19,6 +19,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -277,10 +278,16 @@ public class ValidationUtil {
 
     public static String getTransactionCurrentDate() {
 
-        java.util.Date dNow = new java.util.Date();
-        SimpleDateFormat ft = new SimpleDateFormat("MMM dd',' 'at' hh:mm a");
-        return ft.format(dNow);
+        String date = "";
+        try {
+            java.util.Date dNow = new java.util.Date();
+            SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yyyy");
+            date = ft.format(dNow);
+        } catch (Exception e) {
 
+        }
+
+        return date;
     }
 
     public static Drawable drawableFromUrl(String url) throws IOException {
@@ -444,6 +451,20 @@ public class ValidationUtil {
         }
         return deviceId;
     }
+
+    public static String dateFormate(Calendar datevalue) {
+        String date = "";
+        try {
+            String myFormat = "dd/MM/yyyy";
+            SimpleDateFormat dateFormat = new SimpleDateFormat(myFormat, Locale.US);
+            date = dateFormat.format(datevalue.getTime());
+        } catch (Exception e) {
+
+        }
+
+        return date;
+    }
+
 
 
 }

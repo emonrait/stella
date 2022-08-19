@@ -122,6 +122,15 @@
     <string name="logout">Logout</string>
     <string name="report">Report</string>
     <string name="new_total">New Total</string>
+    <string name="product_name">Product Name</string>
+    <string name="date">Date</string>
+    <string name="color">Color</string>
+    <string name="add_product">Add Product</string>
+    <string name="master_product">Product Master</string>
+    <string name="product_id">Product ID</string>
+    <string name="update_product">Update Product</string>
+    <string name="id">ID</string>
+    <string name="product_status">Product Status</string>
 
 
     <string-array name="spinnerItems">

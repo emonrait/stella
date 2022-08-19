@@ -1,0 +1,204 @@
+package com.raihan.stella.activity;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.raihan.stella.R;
+import com.raihan.stella.model.DialogCustom;
+import com.raihan.stella.model.GlobalVariable;
+import com.raihan.stella.model.Product;
+import com.raihan.stella.model.ValidationUtil;
+
+import java.util.Calendar;
+
+public class ProductMaster extends AppCompatActivity {
+    GlobalVariable globalVariable;
+    private ImageView ivLogout;
+    private ImageView ivBack;
+    private TextView tv_genereal_header_title;
+
+    private EditText date_value;
+    private EditText product_value;
+    private EditText product_id_value;
+    private EditText color_value;
+    private Button btnSubmit;
+    private TabLayout tabLayout;
+    private LinearLayout updateProductLayout;
+    private LinearLayout addProductLayout;
+    final Calendar myCalendar = Calendar.getInstance();
+
+    FirebaseAuth firebaseAuth;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReferenceProduct;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_product_master);
+
+        ivLogout = findViewById(R.id.ivLogout);
+        ivBack = findViewById(R.id.ivBack);
+        tv_genereal_header_title = findViewById(R.id.tv_genereal_header_title);
+
+        date_value = findViewById(R.id.date_value);
+        product_value = findViewById(R.id.product_value);
+        product_id_value = findViewById(R.id.product_id_value);
+        color_value = findViewById(R.id.color_value);
+        btnSubmit = findViewById(R.id.btnSubmit);
+        tabLayout = findViewById(R.id.tabLayout);
+        updateProductLayout = findViewById(R.id.updateProductLayout);
+        addProductLayout = findViewById(R.id.addProductLayout);
+
+
+        globalVariable = ((GlobalVariable) getApplicationContext());
+
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReferenceProduct = FirebaseDatabase.getInstance().getReference("Product");
+
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProductMaster.this, DashboardActivity.class);
+                DialogCustom.doClearActivity(intent, ProductMaster.this);
+            }
+        });
+
+        tv_genereal_header_title.setText(R.string.master_product);
+
+        ivLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogCustom.englishcustomLogout(ProductMaster.this);
+            }
+        });
+
+
+        date_value.setText(ValidationUtil.getTransactionCurrentDate());
+
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, month);
+                myCalendar.set(Calendar.DAY_OF_MONTH, day);
+                date_value.setText(ValidationUtil.dateFormate(myCalendar));
+            }
+        };
+        date_value.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(ProductMaster.this, date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
+            }
+        });
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (date_value.getText().toString().trim().isEmpty()) {
+                    date_value.requestFocus();
+                    DialogCustom.showErrorMessage(ProductMaster.this, "Please Enter Date.");
+
+                } else if (product_value.getText().toString().trim().isEmpty()) {
+                    product_value.requestFocus();
+                    DialogCustom.showErrorMessage(ProductMaster.this, "Please Enter Product Name.");
+
+                } else if (color_value.getText().toString().trim().isEmpty()) {
+                    color_value.requestFocus();
+                    DialogCustom.showErrorMessage(ProductMaster.this, "Please Enter Your Launch Meal.");
+
+                } else if (!DialogCustom.isOnline(ProductMaster.this)) {
+                    DialogCustom.showInternetConnectionMessage(ProductMaster.this);
+
+                } else {
+                    String id = databaseReferenceProduct.push().getKey();
+                    String date = date_value.getText().toString().trim();
+                    String updateBy = firebaseAuth.getCurrentUser().getEmail();
+                    String productNmae = product_value.getText().toString().trim();
+                    String productId = product_id_value.getText().toString().trim();
+                    String color = color_value.getText().toString().trim();
+                    String flag = "Y";
+                    Product meal = new Product(id, productNmae, productId, date, color, flag, updateBy);
+                    // assert id != null;
+                    //databaseReferenceMeal.child(id).setValue(meal);
+                    final LoadingDialog loadingDialog = new LoadingDialog(ProductMaster.this);
+                    loadingDialog.startDialoglog();
+                    try {
+                        databaseReferenceProduct.child(id)
+                                .setValue(meal)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            product_value.setText("");
+                                            color_value.setText("");
+                                            loadingDialog.dismisstDialoglog();
+                                            DialogCustom.showSuccessMessage(ProductMaster.this, "Your Product Add Successfully.");
+
+
+                                        } else {
+                                            DialogCustom.showErrorMessage(ProductMaster.this, task.getResult() + "Unsuccessful");
+                                            loadingDialog.dismisstDialoglog();
+
+                                        }
+                                        loadingDialog.dismisstDialoglog();
+                                    }
+                                });
+                    } catch (Exception e) {
+                        DialogCustom.showErrorMessage(ProductMaster.this, e.getMessage());
+                    }
+
+                }
+            }
+        });
+
+
+        tabLayout.addTab(tabLayout.newTab().setText("Add Product"));
+        tabLayout.addTab(tabLayout.newTab().setText("Product Update"));
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 0) {
+                    addProductLayout.setVisibility(View.VISIBLE);
+                    updateProductLayout.setVisibility(View.GONE);
+
+                } else if (tab.getPosition() == 1) {
+                    addProductLayout.setVisibility(View.GONE);
+                    updateProductLayout.setVisibility(View.VISIBLE);
+                }
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+
+    }
+}
