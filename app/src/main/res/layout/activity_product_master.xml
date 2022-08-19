@@ -228,8 +228,8 @@
                         android:id="@+id/updateProductLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="visible">
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
@@ -270,20 +270,18 @@
                                             android:text="@string/id"
                                             android:textColor="@color/black" />
 
+
                                         <Spinner
                                             android:id="@+id/id_value"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent"
                                             android:layout_weight=".8"
-                                            android:background="@drawable/rectangale"
-                                            android:clickable="false"
-                                            android:cursorVisible="false"
-                                            android:focusable="false"
-                                            android:focusableInTouchMode="false"
-                                            android:gravity="center"
-                                            android:hint="@string/date"
-                                            android:inputType="date"
-                                            android:textColor="@color/black" />
+                                            android:drawSelectorOnTop="true"
+                                            android:prompt="@string/email_prompt"
+                                            android:spinnerMode="dialog"
+                                            android:textAlignment="center"
+                                            android:textSize="14sp"
+                                            android:textStyle="bold" />
 
                                     </LinearLayout>
 

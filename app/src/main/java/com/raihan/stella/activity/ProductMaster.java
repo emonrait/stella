@@ -6,26 +6,36 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.raihan.stella.R;
 import com.raihan.stella.model.DialogCustom;
 import com.raihan.stella.model.GlobalVariable;
 import com.raihan.stella.model.Product;
 import com.raihan.stella.model.ValidationUtil;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class ProductMaster extends AppCompatActivity {
@@ -42,16 +52,39 @@ public class ProductMaster extends AppCompatActivity {
     private TabLayout tabLayout;
     private LinearLayout updateProductLayout;
     private LinearLayout addProductLayout;
+    private Spinner id_value;
     final Calendar myCalendar = Calendar.getInstance();
+
+    private EditText updatecolor_value;
+    private EditText updatedate_value;
+    private EditText updateproduct_value;
+    private EditText updateproduct_id_value;
+    private EditText updateflag_value;
+    private Button btnUpdate;
+
+    ValueEventListener listener;
+    ArrayList<String> spinerList;
+    ArrayAdapter<String> adapter;
+
 
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReferenceProduct;
 
+    String id = "";
+    String productName = "";
+    String productId = "";
+    String flag = "";
+    String color = "";
+    String date = "";
+
+    final LoadingDialog loadingDialog = new LoadingDialog(ProductMaster.this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_master);
+        globalVariable = ((GlobalVariable) getApplicationContext());
 
         ivLogout = findViewById(R.id.ivLogout);
         ivBack = findViewById(R.id.ivBack);
@@ -65,15 +98,21 @@ public class ProductMaster extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         updateProductLayout = findViewById(R.id.updateProductLayout);
         addProductLayout = findViewById(R.id.addProductLayout);
+        id_value = findViewById(R.id.id_value);
+        updatecolor_value = findViewById(R.id.updatecolor_value);
+        updatedate_value = findViewById(R.id.updatedate_value);
+        updateproduct_value = findViewById(R.id.updateproduct_value);
+        updateproduct_id_value = findViewById(R.id.updateproduct_id_value);
+        updateflag_value = findViewById(R.id.updateflag_value);
+        btnUpdate = findViewById(R.id.btnUpdate);
 
+        spinerList = new ArrayList<>();
 
-        globalVariable = ((GlobalVariable) getApplicationContext());
 
         firebaseAuth = FirebaseAuth.getInstance();
-
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReferenceProduct = FirebaseDatabase.getInstance().getReference("Product");
-
+        updateProductLayout.setVisibility(View.GONE);
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,6 +149,24 @@ public class ProductMaster extends AppCompatActivity {
 
             }
         });
+
+
+        id_value.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (!DialogCustom.isOnline(ProductMaster.this)) {
+                    DialogCustom.showInternetConnectionMessage(ProductMaster.this);
+                } else {
+                    getProductInfo();
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,6 +227,46 @@ public class ProductMaster extends AppCompatActivity {
             }
         });
 
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (date_value.getText().toString().trim().isEmpty()) {
+                    date_value.requestFocus();
+                    DialogCustom.showErrorMessage(ProductMaster.this, "Please Enter Date.");
+
+                } else if (updateproduct_value.getText().toString().trim().isEmpty()) {
+                    updateproduct_value.requestFocus();
+                    DialogCustom.showErrorMessage(ProductMaster.this, "Please Enter Product Name.");
+
+                } else if (updateproduct_id_value.getText().toString().trim().isEmpty()) {
+                    updateproduct_id_value.requestFocus();
+                    DialogCustom.showErrorMessage(ProductMaster.this, "Please Enter Product ID.");
+
+                } else if (updatecolor_value.getText().toString().trim().isEmpty()) {
+                    updateproduct_id_value.requestFocus();
+                    DialogCustom.showErrorMessage(ProductMaster.this, "Please Enter Product Color.");
+
+                } else if (updateflag_value.getText().toString().trim().isEmpty()) {
+                    updateflag_value.requestFocus();
+                    DialogCustom.showErrorMessage(ProductMaster.this, "Please Enter Product Status.");
+
+                } else if (!DialogCustom.isOnline(ProductMaster.this)) {
+                    DialogCustom.showInternetConnectionMessage(ProductMaster.this);
+
+                } else {
+
+
+                    try {
+                        loadingDialog.startDialoglog();
+                        updateProduct();
+                    } catch (Exception e) {
+                        DialogCustom.showErrorMessage(ProductMaster.this, e.getMessage());
+                        loadingDialog.dismisstDialoglog();
+                    }
+
+                }
+            }
+        });
 
         tabLayout.addTab(tabLayout.newTab().setText("Add Product"));
         tabLayout.addTab(tabLayout.newTab().setText("Product Update"));
@@ -184,6 +281,14 @@ public class ProductMaster extends AppCompatActivity {
                 } else if (tab.getPosition() == 1) {
                     addProductLayout.setVisibility(View.GONE);
                     updateProductLayout.setVisibility(View.VISIBLE);
+
+                    if (!DialogCustom.isOnline(ProductMaster.this)) {
+                        DialogCustom.showInternetConnectionMessage(ProductMaster.this);
+                    } else {
+                        spinerList.clear();
+                        getProductList();
+                    }
+
                 }
 
             }
@@ -201,4 +306,101 @@ public class ProductMaster extends AppCompatActivity {
 
 
     }
+
+    private void getProductInfo() {
+        if (!DialogCustom.isOnline(ProductMaster.this)) {
+            DialogCustom.showInternetConnectionMessage(ProductMaster.this);
+        } else {
+            //loadingDialog.startDialoglog();
+            Query queryt = databaseReferenceProduct.orderByChild("id").equalTo(id_value.getSelectedItem().toString().trim());
+            queryt.addValueEventListener(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        id = "" + ds.child("id").getValue();
+                        date = "" + ds.child("date").getValue();
+                        productName = "" + ds.child("productName").getValue();
+                        productId = "" + ds.child("productId").getValue();
+                        flag = "" + ds.child("flag").getValue();
+                        color = "" + ds.child("color").getValue();
+
+                    }
+
+                    updateproduct_value.setText(productName);
+                    updatedate_value.setText(date);
+                    updateproduct_id_value.setText(productId);
+                    updateflag_value.setText(flag);
+                    updatecolor_value.setText(color);
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    DialogCustom.showErrorMessage(ProductMaster.this, databaseError.getMessage());
+                }
+            });
+        }
+    }
+
+    private void updateProduct() {
+        Query editQuery = FirebaseDatabase.getInstance().getReference("Product").orderByChild("id").equalTo(id);
+
+        editQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot edtData : dataSnapshot.getChildren()) {
+                    Log.d("data-->", edtData.toString());
+                    edtData.getRef().child("id").setValue(id);
+                    edtData.getRef().child("date").setValue(ValidationUtil.getTransactionCurrentDate());
+                    edtData.getRef().child("productName").setValue(updateproduct_value.getText().toString().trim());
+                    edtData.getRef().child("productId").setValue(updateproduct_id_value.getText().toString().trim());
+                    edtData.getRef().child("color").setValue(updatecolor_value.getText().toString().trim());
+                    edtData.getRef().child("flag").setValue(updateflag_value.getText().toString().trim());
+                    edtData.getRef().child("updateBy").setValue(firebaseAuth.getCurrentUser().getEmail());
+
+                }
+                Toast.makeText(ProductMaster.this, "Product Information Update Successfully....", Toast.LENGTH_LONG).show();
+                loadingDialog.dismisstDialoglog();
+                spinerList.clear();
+                getProductList();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(ProductMaster.this, databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                loadingDialog.dismisstDialoglog();
+            }
+        });
+
+
+    }
+
+    private void getProductList() {
+        spinerList.clear();
+
+        listener = databaseReferenceProduct.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot item : dataSnapshot.getChildren()) {
+                    if (!item.child("id").getValue().equals(id_value.getSelectedItem().toString())) {
+                        String id = "" + item.child("id").getValue();
+                        spinerList.add(id);
+                    }
+
+                }
+                adapter = new ArrayAdapter<String>(ProductMaster.this, android.R.layout.simple_spinner_dropdown_item, spinerList);
+
+                id_value.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 }
