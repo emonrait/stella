@@ -132,6 +132,11 @@
     <string name="update_product">Update Product</string>
     <string name="id">ID</string>
     <string name="product_status">Product Status</string>
+    <string name="stock_in">Stock In</string>
+    <string name="product_percentage">Product Percentage</string>
+    <string name="product_mrp">Product MRP</string>
+    <string name="previous_stock">Previous Stock</string>
+    <string name="product_quantity">Product Quantity</string>
 
 
     <string-array name="spinnerItems">

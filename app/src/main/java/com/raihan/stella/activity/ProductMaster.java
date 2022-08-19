@@ -37,6 +37,7 @@ import com.raihan.stella.model.ValidationUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Objects;
 
 public class ProductMaster extends AppCompatActivity {
     GlobalVariable globalVariable;
@@ -188,19 +189,18 @@ public class ProductMaster extends AppCompatActivity {
                 } else {
                     String id = databaseReferenceProduct.push().getKey();
                     String date = date_value.getText().toString().trim();
-                    String updateBy = firebaseAuth.getCurrentUser().getEmail();
+                    String updateBy = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
                     String productNmae = product_value.getText().toString().trim();
                     String productId = product_id_value.getText().toString().trim();
                     String color = color_value.getText().toString().trim();
                     String flag = "Y";
-                    Product meal = new Product(id, productNmae, productId, date, color, flag, updateBy);
-                    // assert id != null;
-                    //databaseReferenceMeal.child(id).setValue(meal);
+                    Product product = new Product(id, productNmae, productId, date, color, flag, updateBy);
                     final LoadingDialog loadingDialog = new LoadingDialog(ProductMaster.this);
                     loadingDialog.startDialoglog();
                     try {
+                        assert id != null;
                         databaseReferenceProduct.child(id)
-                                .setValue(meal)
+                                .setValue(product)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {

@@ -430,9 +430,10 @@ public class DashboardActivity extends AutoLogout {
             list.add(new MenuModel("Profile", R.drawable.ic_user, "pf"));
             list.add(new MenuModel("Balance", R.drawable.taka, "bl"));
             list.add(new MenuModel("Product Master", R.drawable.taka, "pm"));
+            list.add(new MenuModel("Stock In", R.drawable.taka, "si"));
             list.add(new MenuModel("Statement", R.drawable.ic_bank_statement, "st"));
             list.add(new MenuModel("Members", R.drawable.ic_community, "me"));
-           // list.add(new MenuModel("Condition", R.drawable.ic_terms_and_conditions, "co"));
+            // list.add(new MenuModel("Condition", R.drawable.ic_terms_and_conditions, "co"));
             list.add(new MenuModel("Notification", R.drawable.ic_chat, "no"));
             list.add(new MenuModel("Debit", R.drawable.ic_limit, "db"));
             list.add(new MenuModel("Credit", R.drawable.ic_credit_card, "cr"));
@@ -449,9 +450,10 @@ public class DashboardActivity extends AutoLogout {
             list.add(new MenuModel("Profile", R.drawable.ic_user, "pf"));
             list.add(new MenuModel("Balance", R.drawable.taka, "bl"));
             list.add(new MenuModel("Product Master", R.drawable.taka, "pm"));
+            list.add(new MenuModel("Stock In", R.drawable.taka, "si"));
             list.add(new MenuModel("Statement", R.drawable.ic_bank_statement, "st"));
             list.add(new MenuModel("Members", R.drawable.ic_community, "me"));
-           // list.add(new MenuModel("Condition", R.drawable.ic_terms_and_conditions, "co"));
+            // list.add(new MenuModel("Condition", R.drawable.ic_terms_and_conditions, "co"));
             list.add(new MenuModel("Notification", R.drawable.ic_chat, "no"));
             list.add(new MenuModel("Debit", R.drawable.ic_limit, "db"));
             list.add(new MenuModel("Credit", R.drawable.ic_credit_card, "cr"));
@@ -468,9 +470,10 @@ public class DashboardActivity extends AutoLogout {
             list.add(new MenuModel("Profile", R.drawable.ic_user, "pf"));
             list.add(new MenuModel("Balance", R.drawable.taka, "bl"));
             list.add(new MenuModel("Product Master", R.drawable.taka, "pm"));
+            list.add(new MenuModel("Stock In", R.drawable.taka, "si"));
             list.add(new MenuModel("Statement", R.drawable.ic_bank_statement, "st"));
             list.add(new MenuModel("Members", R.drawable.ic_community, "me"));
-           // list.add(new MenuModel("Condition", R.drawable.ic_terms_and_conditions, "co"));
+            // list.add(new MenuModel("Condition", R.drawable.ic_terms_and_conditions, "co"));
             list.add(new MenuModel("Notification", R.drawable.ic_chat, "no"));
             list.add(new MenuModel("Debit", R.drawable.ic_limit, "db"));
             list.add(new MenuModel("Credit", R.drawable.ic_credit_card, "cr"));
@@ -554,8 +557,12 @@ public class DashboardActivity extends AutoLogout {
                 Intent intent = new Intent(DashboardActivity.this, ImageUpload.class);
                 startActivity(intent);
 
-            }else if ("pm".equals(menu_soft_code.getText().toString())) {
+            } else if ("pm".equals(menu_soft_code.getText().toString())) {
                 Intent intent = new Intent(DashboardActivity.this, ProductMaster.class);
+                startActivity(intent);
+
+            } else if ("si".equals(menu_soft_code.getText().toString())) {
+                Intent intent = new Intent(DashboardActivity.this, StockIn.class);
                 startActivity(intent);
 
             }
