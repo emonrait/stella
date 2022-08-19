@@ -11,9 +11,10 @@ public class Stock {
     String productQty="";
     String previousStock="";
     String flag="";
+    String stockflg="";
     String updateBy="";
 
-    public Stock(String id, String productName, String productId, String date, String color, String productMrp, String productPercent, String productQty, String previousStock, String flag, String updateBy) {
+    public Stock(String id, String productName, String productId, String date, String color, String productMrp, String productPercent, String productQty, String previousStock,String stockflg, String flag, String updateBy) {
         this.id = id;
         this.productName = productName;
         this.productId = productId;
@@ -24,6 +25,7 @@ public class Stock {
         this.productQty = productQty;
         this.previousStock = previousStock;
         this.flag = flag;
+        this.stockflg = stockflg;
         this.updateBy = updateBy;
     }
 
@@ -116,5 +118,13 @@ public class Stock {
 
     public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy;
+    }
+
+    public String getStockflg() {
+        return stockflg;
+    }
+
+    public void setStockflg(String stockflg) {
+        this.stockflg = stockflg;
     }
 }

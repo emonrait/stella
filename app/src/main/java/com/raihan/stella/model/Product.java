@@ -81,4 +81,20 @@ public class Product {
     public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy;
     }
+
+    public String getProductMrp() {
+        return productMrp;
+    }
+
+    public void setProductMrp(String productMrp) {
+        this.productMrp = productMrp;
+    }
+
+    public String getProductPercent() {
+        return productPercent;
+    }
+
+    public void setProductPercent(String productPercent) {
+        this.productPercent = productPercent;
+    }
 }

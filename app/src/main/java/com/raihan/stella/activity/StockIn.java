@@ -206,12 +206,13 @@ public class StockIn extends AppCompatActivity {
                     String color = color_value.getText().toString().trim();
                     String productMrp = product_mrp_value.getText().toString().trim();
                     String productPercent = product_percentage_value.getText().toString().trim();
-                    String productQty = product_qty_value.getText().toString().trim();
+                    String productQty = "+" + product_qty_value.getText().toString().trim();
                     String previousStock = previous_stock_value.getText().toString().trim();
+                    String stockflg = "IN";
                     String flag = "Y";
                     String updateBy = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
 
-                    Stock stock = new Stock(id, productName, productId, date, color, productMrp, productPercent, productQty, previousStock, flag, updateBy);
+                    Stock stock = new Stock(id, productName, productId, date, color, productMrp, productPercent, productQty.trim(), previousStock, stockflg, flag, updateBy);
 
                     final LoadingDialog loadingDialog = new LoadingDialog(StockIn.this);
                     loadingDialog.startDialoglog();
@@ -223,8 +224,6 @@ public class StockIn extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            product_mrp_value.setText("");
-                                            product_percentage_value.setText("");
                                             product_qty_value.setText("");
                                             loadingDialog.dismisstDialoglog();
                                             DialogCustom.showSuccessMessage(StockIn.this, "Your Product Stock In Successfully.");
@@ -346,7 +345,7 @@ public class StockIn extends AppCompatActivity {
                         if (!map.isEmpty() && Objects.equals(map.get("flag"), "Y")) {
                             Object amount = map.get("productQty");
                             try {
-                                double pvalue = Double.parseDouble(ValidationUtil.replacecomma(String.valueOf(amount)));
+                                double pvalue = Double.parseDouble(String.valueOf(amount));
                                 total += pvalue;
                                 previous_stock_value.setText(String.valueOf(total));
                             } catch (Exception e) {
