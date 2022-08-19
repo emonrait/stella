@@ -431,6 +431,7 @@ public class DashboardActivity extends AutoLogout {
             list.add(new MenuModel("Balance", R.drawable.taka, "bl"));
             list.add(new MenuModel("Product Master", R.drawable.taka, "pm"));
             list.add(new MenuModel("Stock In", R.drawable.taka, "si"));
+            list.add(new MenuModel("Stock Out", R.drawable.taka, "so"));
             list.add(new MenuModel("Statement", R.drawable.ic_bank_statement, "st"));
             list.add(new MenuModel("Members", R.drawable.ic_community, "me"));
             // list.add(new MenuModel("Condition", R.drawable.ic_terms_and_conditions, "co"));
@@ -451,6 +452,7 @@ public class DashboardActivity extends AutoLogout {
             list.add(new MenuModel("Balance", R.drawable.taka, "bl"));
             list.add(new MenuModel("Product Master", R.drawable.taka, "pm"));
             list.add(new MenuModel("Stock In", R.drawable.taka, "si"));
+            list.add(new MenuModel("Stock Out", R.drawable.taka, "so"));
             list.add(new MenuModel("Statement", R.drawable.ic_bank_statement, "st"));
             list.add(new MenuModel("Members", R.drawable.ic_community, "me"));
             // list.add(new MenuModel("Condition", R.drawable.ic_terms_and_conditions, "co"));
@@ -471,6 +473,7 @@ public class DashboardActivity extends AutoLogout {
             list.add(new MenuModel("Balance", R.drawable.taka, "bl"));
             list.add(new MenuModel("Product Master", R.drawable.taka, "pm"));
             list.add(new MenuModel("Stock In", R.drawable.taka, "si"));
+            list.add(new MenuModel("Stock Out", R.drawable.taka, "so"));
             list.add(new MenuModel("Statement", R.drawable.ic_bank_statement, "st"));
             list.add(new MenuModel("Members", R.drawable.ic_community, "me"));
             // list.add(new MenuModel("Condition", R.drawable.ic_terms_and_conditions, "co"));
@@ -563,6 +566,10 @@ public class DashboardActivity extends AutoLogout {
 
             } else if ("si".equals(menu_soft_code.getText().toString())) {
                 Intent intent = new Intent(DashboardActivity.this, StockIn.class);
+                startActivity(intent);
+
+            } else if ("so".equals(menu_soft_code.getText().toString())) {
+                Intent intent = new Intent(DashboardActivity.this, StockOut.class);
                 startActivity(intent);
 
             }

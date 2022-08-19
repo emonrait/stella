@@ -6,18 +6,22 @@ public class Product {
     String productId="";
     String date="";
     String color="";
+    String productMrp="";
+    String productPercent="";
     String flag="";
     String updateBy="";
 
     public Product() {
     }
 
-    public Product(String id, String productName, String productId, String date, String color, String flag,String updateBy) {
+    public Product(String id, String productName, String productId, String date, String color,String productMrp,String productPercent, String flag,String updateBy) {
         this.id = id;
         this.productName = productName;
         this.productId = productId;
         this.date = date;
         this.color = color;
+        this.productMrp = productMrp;
+        this.productPercent = productPercent;
         this.flag = flag;
         this.updateBy = updateBy;
     }

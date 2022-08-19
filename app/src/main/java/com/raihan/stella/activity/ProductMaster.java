@@ -49,6 +49,8 @@ public class ProductMaster extends AppCompatActivity {
     private EditText product_value;
     private EditText product_id_value;
     private EditText color_value;
+    private EditText product_mrp_value;
+    private EditText product_percentage_value;
     private Button btnSubmit;
     private TabLayout tabLayout;
     private LinearLayout updateProductLayout;
@@ -61,6 +63,8 @@ public class ProductMaster extends AppCompatActivity {
     private EditText updateproduct_value;
     private EditText updateproduct_id_value;
     private EditText updateflag_value;
+    private EditText updateproduct_mrp_value;
+    private EditText updateproduct_percentage_value;
     private Button btnUpdate;
 
     ValueEventListener listener;
@@ -77,6 +81,8 @@ public class ProductMaster extends AppCompatActivity {
     String productId = "";
     String flag = "";
     String color = "";
+    String productMrp = "0";
+    String productPercent = "0";
     String date = "";
 
     final LoadingDialog loadingDialog = new LoadingDialog(ProductMaster.this);
@@ -106,6 +112,10 @@ public class ProductMaster extends AppCompatActivity {
         updateproduct_id_value = findViewById(R.id.updateproduct_id_value);
         updateflag_value = findViewById(R.id.updateflag_value);
         btnUpdate = findViewById(R.id.btnUpdate);
+        product_mrp_value = findViewById(R.id.product_mrp_value);
+        product_percentage_value = findViewById(R.id.product_percentage_value);
+        updateproduct_mrp_value = findViewById(R.id.updateproduct_mrp_value);
+        updateproduct_percentage_value = findViewById(R.id.updateproduct_percentage_value);
 
         spinerList = new ArrayList<>();
 
@@ -179,9 +189,21 @@ public class ProductMaster extends AppCompatActivity {
                     product_value.requestFocus();
                     DialogCustom.showErrorMessage(ProductMaster.this, "Please Enter Product Name.");
 
+                } else if (product_id_value.getText().toString().trim().isEmpty()) {
+                    product_id_value.requestFocus();
+                    DialogCustom.showErrorMessage(ProductMaster.this, "Please Enter Product ID.");
+
                 } else if (color_value.getText().toString().trim().isEmpty()) {
                     color_value.requestFocus();
-                    DialogCustom.showErrorMessage(ProductMaster.this, "Please Enter Your Launch Meal.");
+                    DialogCustom.showErrorMessage(ProductMaster.this, "Please Enter Product Color.");
+
+                } else if (product_mrp_value.getText().toString().trim().isEmpty()) {
+                    product_mrp_value.requestFocus();
+                    DialogCustom.showErrorMessage(ProductMaster.this, "Please Enter Product MRP value.");
+
+                } else if (product_percentage_value.getText().toString().trim().isEmpty()) {
+                    product_percentage_value.requestFocus();
+                    DialogCustom.showErrorMessage(ProductMaster.this, "Please Enter Product Percentage value.");
 
                 } else if (!DialogCustom.isOnline(ProductMaster.this)) {
                     DialogCustom.showInternetConnectionMessage(ProductMaster.this);
@@ -193,8 +215,11 @@ public class ProductMaster extends AppCompatActivity {
                     String productNmae = product_value.getText().toString().trim();
                     String productId = product_id_value.getText().toString().trim();
                     String color = color_value.getText().toString().trim();
+                    String productMrp = product_mrp_value.getText().toString().trim();
+                    String productPercent = product_percentage_value.getText().toString().trim();
+
                     String flag = "Y";
-                    Product product = new Product(id, productNmae, productId, date, color, flag, updateBy);
+                    Product product = new Product(id, productNmae, productId, date, color, productMrp, productPercent, flag, updateBy);
                     final LoadingDialog loadingDialog = new LoadingDialog(ProductMaster.this);
                     loadingDialog.startDialoglog();
                     try {
@@ -207,6 +232,8 @@ public class ProductMaster extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             product_value.setText("");
                                             color_value.setText("");
+                                            product_mrp_value.setText("");
+                                            product_percentage_value.setText("");
                                             loadingDialog.dismisstDialoglog();
                                             DialogCustom.showSuccessMessage(ProductMaster.this, "Your Product Add Successfully.");
 
@@ -249,6 +276,14 @@ public class ProductMaster extends AppCompatActivity {
                 } else if (updateflag_value.getText().toString().trim().isEmpty()) {
                     updateflag_value.requestFocus();
                     DialogCustom.showErrorMessage(ProductMaster.this, "Please Enter Product Status.");
+
+                } else if (updateproduct_mrp_value.getText().toString().trim().isEmpty()) {
+                    updateproduct_mrp_value.requestFocus();
+                    DialogCustom.showErrorMessage(ProductMaster.this, "Please Enter Product MRP Value.");
+
+                } else if (updateproduct_percentage_value.getText().toString().trim().isEmpty()) {
+                    updateproduct_percentage_value.requestFocus();
+                    DialogCustom.showErrorMessage(ProductMaster.this, "Please Enter Product Percentage Value.");
 
                 } else if (!DialogCustom.isOnline(ProductMaster.this)) {
                     DialogCustom.showInternetConnectionMessage(ProductMaster.this);
@@ -324,6 +359,16 @@ public class ProductMaster extends AppCompatActivity {
                         productId = "" + ds.child("productId").getValue();
                         flag = "" + ds.child("flag").getValue();
                         color = "" + ds.child("color").getValue();
+                        if (ds.child("productMrp").getValue() == null || ds.child("productMrp").getValue() == "0") {
+                            productMrp = "0";
+                        } else {
+                            productMrp = "" + ds.child("productMrp").getValue();
+                        }
+                        if (ds.child("productPercent").getValue() == null || ds.child("productPercent").getValue() == "0") {
+                            productPercent = "0";
+                        } else {
+                            productPercent = "" + ds.child("productPercent").getValue();
+                        }
 
                     }
 
@@ -332,6 +377,8 @@ public class ProductMaster extends AppCompatActivity {
                     updateproduct_id_value.setText(productId);
                     updateflag_value.setText(flag);
                     updatecolor_value.setText(color);
+                    updateproduct_mrp_value.setText(productMrp);
+                    updateproduct_percentage_value.setText(productPercent);
 
                 }
 
@@ -358,6 +405,8 @@ public class ProductMaster extends AppCompatActivity {
                     edtData.getRef().child("color").setValue(updatecolor_value.getText().toString().trim());
                     edtData.getRef().child("flag").setValue(updateflag_value.getText().toString().trim());
                     edtData.getRef().child("updateBy").setValue(firebaseAuth.getCurrentUser().getEmail());
+                    edtData.getRef().child("productMrp").setValue(updateproduct_mrp_value.getText().toString().trim());
+                    edtData.getRef().child("productPercent").setValue(updateproduct_percentage_value.getText().toString().trim());
 
                 }
                 Toast.makeText(ProductMaster.this, "Product Information Update Successfully....", Toast.LENGTH_LONG).show();

@@ -28,8 +28,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activity.StockOut"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.StockIn"
-            android:exported="false" />
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ProductMaster"
             android:configChanges="orientation|keyboardHidden"

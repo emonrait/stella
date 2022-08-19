@@ -153,12 +153,12 @@
                                             android:layout_height="match_parent"
                                             android:layout_weight=".8"
                                             android:background="@drawable/rectangale"
-                                            android:gravity="center"
-                                            android:hint="@string/product_name"
                                             android:clickable="false"
                                             android:cursorVisible="false"
                                             android:focusable="false"
                                             android:focusableInTouchMode="false"
+                                            android:gravity="center"
+                                            android:hint="@string/product_name"
                                             android:textColor="@color/black" />
 
                                     </LinearLayout>
@@ -185,12 +185,13 @@
                                             android:layout_height="match_parent"
                                             android:layout_weight=".8"
                                             android:background="@drawable/rectangale"
-                                            android:gravity="center"
                                             android:clickable="false"
                                             android:cursorVisible="false"
                                             android:focusable="false"
                                             android:focusableInTouchMode="false"
+                                            android:gravity="center"
                                             android:hint="@string/previous_stock"
+                                            android:text="0"
                                             android:textColor="@color/black" />
 
                                     </LinearLayout>
@@ -217,12 +218,12 @@
                                             android:layout_height="match_parent"
                                             android:layout_weight=".8"
                                             android:background="@drawable/rectangale"
-                                            android:gravity="center"
-                                            android:hint="@string/color"
                                             android:clickable="false"
                                             android:cursorVisible="false"
                                             android:focusable="false"
                                             android:focusableInTouchMode="false"
+                                            android:gravity="center"
+                                            android:hint="@string/color"
                                             android:textColor="@color/black" />
 
                                     </LinearLayout>
@@ -249,6 +250,10 @@
                                             android:layout_height="match_parent"
                                             android:layout_weight=".8"
                                             android:background="@drawable/rectangale"
+                                            android:clickable="false"
+                                            android:cursorVisible="false"
+                                            android:focusable="false"
+                                            android:focusableInTouchMode="false"
                                             android:gravity="center"
                                             android:hint="@string/product_mrp"
                                             android:inputType="numberDecimal"
@@ -281,6 +286,10 @@
                                             android:gravity="center"
                                             android:hint="@string/product_percentage"
                                             android:inputType="numberDecimal"
+                                            android:clickable="false"
+                                            android:cursorVisible="false"
+                                            android:focusable="false"
+                                            android:focusableInTouchMode="false"
                                             android:textColor="@color/black" />
 
                                     </LinearLayout>

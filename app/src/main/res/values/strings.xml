@@ -137,6 +137,7 @@
     <string name="product_mrp">Product MRP</string>
     <string name="previous_stock">Previous Stock</string>
     <string name="product_quantity">Product Quantity</string>
+    <string name="stock_out">Stock Out</string>
 
 
     <string-array name="spinnerItems">

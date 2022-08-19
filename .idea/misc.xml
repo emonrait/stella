@@ -80,6 +80,7 @@
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/activity_statement.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/activity_stock_in.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/activity_stock_out.xml" value="0.24270833333333333" />
         <entry key="app/src/main/res/layout/activity_total_balance.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/activity_transaction.xml" value="0.22291666666666668" />
         <entry key="app/src/main/res/layout/cardview.xml" value="0.2578125" />

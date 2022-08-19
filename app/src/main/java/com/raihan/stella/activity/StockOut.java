@@ -13,13 +13,11 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,7 +28,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.raihan.stella.R;
 import com.raihan.stella.model.DialogCustom;
 import com.raihan.stella.model.GlobalVariable;
-import com.raihan.stella.model.Product;
 import com.raihan.stella.model.Stock;
 import com.raihan.stella.model.ValidationUtil;
 
@@ -39,7 +36,7 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.Objects;
 
-public class StockIn extends AppCompatActivity {
+public class StockOut extends AppCompatActivity {
     GlobalVariable globalVariable;
     private ImageView ivLogout;
     private ImageView ivBack;
@@ -52,7 +49,7 @@ public class StockIn extends AppCompatActivity {
     private EditText product_mrp_value;
     private EditText product_percentage_value;
     private EditText product_qty_value;
-    private Button btnStockIn;
+    private Button btnStockOut;
     private Spinner id_value;
     final Calendar myCalendar = Calendar.getInstance();
 
@@ -72,16 +69,15 @@ public class StockIn extends AppCompatActivity {
     String productId = "";
     String flag = "";
     String color = "";
-    String productMrp = "";
-    String productPercent = "";
+    String productMrp = "0";
+    String productPercent = "0";
     String date = "";
-
-    final LoadingDialog loadingDialog = new LoadingDialog(StockIn.this);
+    final LoadingDialog loadingDialog = new LoadingDialog(StockOut.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stock_in);
+        setContentView(R.layout.activity_stock_out);
 
         globalVariable = ((GlobalVariable) getApplicationContext());
 
@@ -93,7 +89,7 @@ public class StockIn extends AppCompatActivity {
         product_value = findViewById(R.id.product_value);
         previous_stock_value = findViewById(R.id.previous_stock_value);
         color_value = findViewById(R.id.color_value);
-        btnStockIn = findViewById(R.id.btnStockIn);
+        btnStockOut = findViewById(R.id.btnStockOut);
         product_mrp_value = findViewById(R.id.product_mrp_value);
         id_value = findViewById(R.id.id_value);
         product_percentage_value = findViewById(R.id.product_percentage_value);
@@ -110,17 +106,17 @@ public class StockIn extends AppCompatActivity {
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(StockIn.this, DashboardActivity.class);
-                DialogCustom.doClearActivity(intent, StockIn.this);
+                Intent intent = new Intent(StockOut.this, DashboardActivity.class);
+                DialogCustom.doClearActivity(intent, StockOut.this);
             }
         });
 
-        tv_genereal_header_title.setText(R.string.stock_in);
+        tv_genereal_header_title.setText(R.string.stock_out);
 
         ivLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogCustom.englishcustomLogout(StockIn.this);
+                DialogCustom.englishcustomLogout(StockOut.this);
             }
         });
 
@@ -139,13 +135,13 @@ public class StockIn extends AppCompatActivity {
         date_value.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(StockIn.this, date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(StockOut.this, date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
 
             }
         });
 
-        if (!DialogCustom.isOnline(StockIn.this)) {
-            DialogCustom.showInternetConnectionMessage(StockIn.this);
+        if (!DialogCustom.isOnline(StockOut.this)) {
+            DialogCustom.showInternetConnectionMessage(StockOut.this);
         } else {
             getProductList();
         }
@@ -154,8 +150,8 @@ public class StockIn extends AppCompatActivity {
         id_value.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (!DialogCustom.isOnline(StockIn.this)) {
-                    DialogCustom.showInternetConnectionMessage(StockIn.this);
+                if (!DialogCustom.isOnline(StockOut.this)) {
+                    DialogCustom.showInternetConnectionMessage(StockOut.this);
                 } else {
                     getProductInfo();
                     getPreviousStock();
@@ -168,35 +164,35 @@ public class StockIn extends AppCompatActivity {
             }
         });
 
-        btnStockIn.setOnClickListener(new View.OnClickListener() {
+        btnStockOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (date_value.getText().toString().trim().isEmpty()) {
                     date_value.requestFocus();
-                    DialogCustom.showErrorMessage(StockIn.this, "Please Enter Date.");
+                    DialogCustom.showErrorMessage(StockOut.this, "Please Enter Date.");
 
                 } else if (product_value.getText().toString().trim().isEmpty()) {
                     product_value.requestFocus();
-                    DialogCustom.showErrorMessage(StockIn.this, "Please Enter Product Name.");
+                    DialogCustom.showErrorMessage(StockOut.this, "Please Enter Product Name.");
 
                 } else if (color_value.getText().toString().trim().isEmpty()) {
                     color_value.requestFocus();
-                    DialogCustom.showErrorMessage(StockIn.this, "Please Enter Product Color.");
+                    DialogCustom.showErrorMessage(StockOut.this, "Please Enter Product Color.");
 
                 } else if (product_mrp_value.getText().toString().trim().isEmpty()) {
                     product_mrp_value.requestFocus();
-                    DialogCustom.showErrorMessage(StockIn.this, "Please Enter Product MRP Value.");
+                    DialogCustom.showErrorMessage(StockOut.this, "Please Enter Product MRP Value.");
 
                 } else if (product_percentage_value.getText().toString().trim().isEmpty()) {
                     product_percentage_value.requestFocus();
-                    DialogCustom.showErrorMessage(StockIn.this, "Please Enter Product Percentage Value.");
+                    DialogCustom.showErrorMessage(StockOut.this, "Please Enter Product Percentage Value.");
 
                 } else if (product_qty_value.getText().toString().trim().isEmpty()) {
                     product_qty_value.requestFocus();
-                    DialogCustom.showErrorMessage(StockIn.this, "Please Enter Product Quantity.");
+                    DialogCustom.showErrorMessage(StockOut.this, "Please Enter Product Quantity.");
 
-                } else if (!DialogCustom.isOnline(StockIn.this)) {
-                    DialogCustom.showInternetConnectionMessage(StockIn.this);
+                } else if (!DialogCustom.isOnline(StockOut.this)) {
+                    DialogCustom.showInternetConnectionMessage(StockOut.this);
 
                 } else {
                     String id = databaseReferenceStock.push().getKey();
@@ -213,7 +209,7 @@ public class StockIn extends AppCompatActivity {
 
                     Stock stock = new Stock(id, productName, productId, date, color, productMrp, productPercent, productQty, previousStock, flag, updateBy);
 
-                    final LoadingDialog loadingDialog = new LoadingDialog(StockIn.this);
+                    final LoadingDialog loadingDialog = new LoadingDialog(StockOut.this);
                     loadingDialog.startDialoglog();
                     try {
                         assert id != null;
@@ -227,11 +223,11 @@ public class StockIn extends AppCompatActivity {
                                             product_percentage_value.setText("");
                                             product_qty_value.setText("");
                                             loadingDialog.dismisstDialoglog();
-                                            DialogCustom.showSuccessMessage(StockIn.this, "Your Product Stock In Successfully.");
+                                            DialogCustom.showSuccessMessage(StockOut.this, "Your Product Stock In Successfully.");
 
 
                                         } else {
-                                            DialogCustom.showErrorMessage(StockIn.this, task.getResult() + "Unsuccessful");
+                                            DialogCustom.showErrorMessage(StockOut.this, task.getResult() + "Unsuccessful");
                                             loadingDialog.dismisstDialoglog();
 
                                         }
@@ -239,7 +235,7 @@ public class StockIn extends AppCompatActivity {
                                     }
                                 });
                     } catch (Exception e) {
-                        DialogCustom.showErrorMessage(StockIn.this, e.getMessage());
+                        DialogCustom.showErrorMessage(StockOut.this, e.getMessage());
                     }
 
                 }
@@ -264,7 +260,7 @@ public class StockIn extends AppCompatActivity {
 
 
                     }
-                    adapter = new ArrayAdapter<String>(StockIn.this, android.R.layout.simple_spinner_dropdown_item, spinerList);
+                    adapter = new ArrayAdapter<String>(StockOut.this, android.R.layout.simple_spinner_dropdown_item, spinerList);
 
                     id_value.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
@@ -281,8 +277,8 @@ public class StockIn extends AppCompatActivity {
     }
 
     private void getProductInfo() {
-        if (!DialogCustom.isOnline(StockIn.this)) {
-            DialogCustom.showInternetConnectionMessage(StockIn.this);
+        if (!DialogCustom.isOnline(StockOut.this)) {
+            DialogCustom.showInternetConnectionMessage(StockOut.this);
         } else {
             //loadingDialog.startDialoglog();
             Query queryt = databaseReferenceProduct.orderByChild("productId").equalTo(id_value.getSelectedItem().toString().trim());
@@ -320,7 +316,7 @@ public class StockIn extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    DialogCustom.showErrorMessage(StockIn.this, databaseError.getMessage());
+                    DialogCustom.showErrorMessage(StockOut.this, databaseError.getMessage());
                 }
             });
         }
@@ -329,8 +325,8 @@ public class StockIn extends AppCompatActivity {
     }
 
     private void getPreviousStock() {
-        if (!DialogCustom.isOnline(StockIn.this)) {
-            DialogCustom.showInternetConnectionMessage(StockIn.this);
+        if (!DialogCustom.isOnline(StockOut.this)) {
+            DialogCustom.showInternetConnectionMessage(StockOut.this);
         } else {
             loadingDialog.startDialoglog();
             Query query = databaseReferenceStock.orderByChild("productId").equalTo(id_value.getSelectedItem().toString().trim());
@@ -370,7 +366,7 @@ public class StockIn extends AppCompatActivity {
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     loadingDialog.dismisstDialoglog();
                     //throw databaseError.toException(); // don't ignore errors
-                    DialogCustom.showErrorMessage(StockIn.this, databaseError.getMessage());
+                    DialogCustom.showErrorMessage(StockOut.this, databaseError.getMessage());
                 }
             });
         }
@@ -378,7 +374,8 @@ public class StockIn extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(StockIn.this, DashboardActivity.class);
-        DialogCustom.doClearActivity(intent, StockIn.this);
+        Intent intent = new Intent(StockOut.this, DashboardActivity.class);
+        DialogCustom.doClearActivity(intent, StockOut.this);
     }
+
 }
