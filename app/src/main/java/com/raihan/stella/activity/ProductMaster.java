@@ -362,7 +362,7 @@ public class ProductMaster extends AppCompatActivity {
                 }
                 Toast.makeText(ProductMaster.this, "Product Information Update Successfully....", Toast.LENGTH_LONG).show();
                 loadingDialog.dismisstDialoglog();
-               // spinerList.clear();
+                // spinerList.clear();
                 getProductList();
             }
 
@@ -400,9 +400,14 @@ public class ProductMaster extends AppCompatActivity {
 
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(ProductMaster.this, DashboardActivity.class);
+        DialogCustom.doClearActivity(intent, ProductMaster.this);
+    }
 }

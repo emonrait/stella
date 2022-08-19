@@ -344,4 +344,9 @@ public class StockIn extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(StockIn.this, DashboardActivity.class);
+        DialogCustom.doClearActivity(intent, StockIn.this);
+    }
 }
