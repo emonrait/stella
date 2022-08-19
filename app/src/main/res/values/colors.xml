@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#74b9ff</color>
+    <color name="colorPrimary">#A22C2A</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorWhite">#ffffff</color>
-    <color name="stoke_color_account_detail">#74b9ff</color>
-    <color name="background_view_benificiary">#74b9ff</color>
+    <color name="stoke_color_account_detail">#A22C2A</color>
+    <color name="background_view_benificiary">#A22C2A</color>
     <color name="white">#FFFFFF</color>
-    <color name="purple">#74b9ff</color>
+    <color name="purple">#A22C2A</color>
     <color name="black">#3a3a3a</color>
     <color name="blackfortext">#252525</color>
     <color name="background_has">#e6e6e6</color>

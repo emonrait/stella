@@ -30,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.raihan.stella.R;
+import com.raihan.stella.model.AutoLogout;
 import com.raihan.stella.model.DialogCustom;
 import com.raihan.stella.model.GlobalVariable;
 import com.raihan.stella.model.Product;
@@ -39,7 +40,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
 
-public class ProductMaster extends AppCompatActivity {
+public class ProductMaster extends AutoLogout {
     GlobalVariable globalVariable;
     private ImageView ivLogout;
     private ImageView ivBack;
