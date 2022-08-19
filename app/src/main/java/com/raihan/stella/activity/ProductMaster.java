@@ -255,7 +255,6 @@ public class ProductMaster extends AppCompatActivity {
 
                 } else {
 
-
                     try {
                         loadingDialog.startDialoglog();
                         updateProduct();
@@ -285,7 +284,7 @@ public class ProductMaster extends AppCompatActivity {
                     if (!DialogCustom.isOnline(ProductMaster.this)) {
                         DialogCustom.showInternetConnectionMessage(ProductMaster.this);
                     } else {
-                        spinerList.clear();
+                        //spinerList.clear();
                         getProductList();
                     }
 
@@ -363,7 +362,7 @@ public class ProductMaster extends AppCompatActivity {
                 }
                 Toast.makeText(ProductMaster.this, "Product Information Update Successfully....", Toast.LENGTH_LONG).show();
                 loadingDialog.dismisstDialoglog();
-                spinerList.clear();
+               // spinerList.clear();
                 getProductList();
             }
 
@@ -378,27 +377,32 @@ public class ProductMaster extends AppCompatActivity {
     }
 
     private void getProductList() {
-        spinerList.clear();
+        //spinerList.clear();
+        try {
+            spinerList = new ArrayList<>();
 
-        listener = databaseReferenceProduct.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot item : dataSnapshot.getChildren()) {
+            listener = databaseReferenceProduct.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot item : dataSnapshot.getChildren()) {
                         String id = "" + item.child("id").getValue();
                         spinerList.add(id);
 
+                    }
+                    adapter = new ArrayAdapter<String>(ProductMaster.this, android.R.layout.simple_spinner_dropdown_item, spinerList);
+
+                    id_value.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                 }
-                adapter = new ArrayAdapter<String>(ProductMaster.this, android.R.layout.simple_spinner_dropdown_item, spinerList);
 
-                id_value.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }
