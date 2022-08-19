@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Stella Sanitary</string>
     <string name="email_prompt">Choose a Email</string>
+    <string name="email_product">Choose a Product id</string>
     <string name="payment_prompt">Choose a Payment Mode</string>
     <string name="open">Open</string>
     <string name="close">Close</string>

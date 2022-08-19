@@ -277,7 +277,7 @@
                                             android:layout_height="match_parent"
                                             android:layout_weight=".8"
                                             android:drawSelectorOnTop="true"
-                                            android:prompt="@string/email_prompt"
+                                            android:prompt="@string/email_product"
                                             android:spinnerMode="dialog"
                                             android:textAlignment="center"
                                             android:textSize="14sp"
