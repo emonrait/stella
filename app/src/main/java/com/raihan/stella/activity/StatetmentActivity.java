@@ -43,6 +43,7 @@ public class StatetmentActivity extends AutoLogout {
     DatabaseReference databaseReferenceTransaction;
     DatabaseReference databaseReferenceStock;
     DatabaseReference databaseReferenceProduct;
+    DatabaseReference databaseReferenceSell;
     String check;
     private ImageView ivLogout;
     private ImageView ivBack;
@@ -76,6 +77,7 @@ public class StatetmentActivity extends AutoLogout {
         databaseReferenceStock = FirebaseDatabase.getInstance().getReference("Stock");
         databaseReferenceProduct = FirebaseDatabase.getInstance().getReference("Product");
         databaseReferenceTransaction = FirebaseDatabase.getInstance().getReference("Transaction");
+        databaseReferenceSell = FirebaseDatabase.getInstance().getReference("Sell");
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,10 +128,10 @@ public class StatetmentActivity extends AutoLogout {
                     if (!DialogCustom.isOnline(StatetmentActivity.this)) {
                         DialogCustom.showInternetConnectionMessage(StatetmentActivity.this);
                     } else {
-                        getTranastionList();
+                        getAllSell();
                     }
 
-                }else if (tab.getPosition() == 3) {
+                } else if (tab.getPosition() == 3) {
 
                     if (!DialogCustom.isOnline(StatetmentActivity.this)) {
                         DialogCustom.showInternetConnectionMessage(StatetmentActivity.this);
@@ -254,6 +256,52 @@ public class StatetmentActivity extends AutoLogout {
         listdata.clear();
         loadingDialog.startDialoglog();
         databaseReferenceStock.orderByChild("stockflg").equalTo("OUT").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    if (ds.exists() && ds.child("flag").getValue().equals("Y")) {
+                        String txn = ds.child("id").getValue(String.class);
+                        String date = ds.child("date").getValue(String.class);
+                        String amo = ds.child("amount").getValue(String.class);
+                        String invoice = ds.child("invoiceno").getValue(String.class);
+                        String email = ds.child("email").getValue(String.class);
+                        // Log.d("TAG", date + " / "+txn);
+                        ListItem listitem = new ListItem(txn, date, amo, invoice, email);
+                        listdata.add(listitem);
+                        // Log.e("Data--3", listitem.getTxnid());
+                    }
+                    loadingDialog.dismisstDialoglog();
+
+                }
+                statementListAdapter = new StatementListAdapter(StatetmentActivity.this, listdata, new StatementListAdapter.OnItemClickListener() {
+                    @Override
+                    public void onContactSelected(ListItem item) {
+                        DialogCustom.showSuccessMessage(StatetmentActivity.this, item.getAmount() + item.getEmail());
+
+                    }
+                });
+                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
+                recyclerView.setHasFixedSize(true);
+
+                recyclerView.setAdapter(statementListAdapter);
+                statementListAdapter.notifyDataSetChanged();
+                loadingDialog.dismisstDialoglog();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                loadingDialog.dismisstDialoglog();
+                DialogCustom.showErrorMessage(StatetmentActivity.this, databaseError.getMessage());
+            }
+        });
+    }
+
+    private void getAllSell() {
+        listdata.clear();
+        loadingDialog.startDialoglog();
+        databaseReferenceSell.orderByChild("flg").equalTo("Y").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
