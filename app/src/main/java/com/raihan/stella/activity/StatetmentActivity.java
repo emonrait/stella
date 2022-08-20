@@ -33,6 +33,7 @@ import com.raihan.stella.model.MyAdpterNew;
 import com.raihan.stella.model.StatementListAdapter;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class StatetmentActivity extends AutoLogout {
     GlobalVariable globalVariable;
@@ -301,11 +302,11 @@ public class StatetmentActivity extends AutoLogout {
     private void getAllSell() {
         listdata.clear();
         loadingDialog.startDialoglog();
-        databaseReferenceSell.orderByChild("flg").equalTo("Y").addValueEventListener(new ValueEventListener() {
+        databaseReferenceSell.orderByChild("flag").equalTo("Y").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if (ds.exists() && ds.child("flag").getValue().equals("Y")) {
+                    if (ds.exists() && Objects.equals(ds.child("flag").getValue(), "Y")) {
                         String txn = ds.child("id").getValue(String.class);
                         String date = ds.child("date").getValue(String.class);
                         String amo = ds.child("amount").getValue(String.class);
