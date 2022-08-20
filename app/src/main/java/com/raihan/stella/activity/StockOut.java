@@ -31,6 +31,7 @@ import com.raihan.stella.R;
 import com.raihan.stella.model.AutoLogout;
 import com.raihan.stella.model.DialogCustom;
 import com.raihan.stella.model.GlobalVariable;
+import com.raihan.stella.model.Sell;
 import com.raihan.stella.model.Stock;
 import com.raihan.stella.model.ValidationUtil;
 
@@ -69,6 +70,7 @@ public class StockOut extends AutoLogout {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReferenceStock;
     DatabaseReference databaseReferenceProduct;
+    DatabaseReference databaseReferenceSell;
 
     String id = "";
     String productName = "";
@@ -111,6 +113,7 @@ public class StockOut extends AutoLogout {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReferenceStock = FirebaseDatabase.getInstance().getReference("Stock");
         databaseReferenceProduct = FirebaseDatabase.getInstance().getReference("Product");
+        databaseReferenceSell = FirebaseDatabase.getInstance().getReference("Sell");
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,6 +164,9 @@ public class StockOut extends AutoLogout {
                 if (!DialogCustom.isOnline(StockOut.this)) {
                     DialogCustom.showInternetConnectionMessage(StockOut.this);
                 } else {
+                    product_qty_value.setText("");
+                    sell_percent_value.setText("");
+                    sell_price_value.setText("");
                     getProductInfo();
                     getPreviousStock();
                 }
@@ -192,20 +198,20 @@ public class StockOut extends AutoLogout {
                     sell_percent_value.requestFocus();
                     DialogCustom.showErrorMessage(StockOut.this, "Please Enter Product Sell Percentage");
 
-                }else if (sell_percent_value.getText().toString().isEmpty()) {
+                } else if (sell_percent_value.getText().toString().isEmpty()) {
                     sell_percent_value.requestFocus();
                     DialogCustom.showErrorMessage(StockOut.this, "Please Enter Product Sell Percentage");
 
                 } else {
-                  try {
-                      double oldMrp = Double.parseDouble(ValidationUtil.replacecomma(product_mrp_value.getText().toString()));
-                      double quantity = Double.parseDouble(ValidationUtil.replacecomma(product_qty_value.getText().toString()));
-                      double sellPercentage = Double.parseDouble(ValidationUtil.replacecomma(sell_percent_value.getText().toString()));
-                      double totalPrice = (oldMrp * quantity) - ((sellPercentage * oldMrp * quantity) / 100);
-                      sell_price_value.setText(String.valueOf(totalPrice));
-                  }catch (Exception e){
-                      DialogCustom.showErrorMessage(StockOut.this,e.getMessage());
-                  }
+                    try {
+                        double oldMrp = Double.parseDouble(ValidationUtil.replacecomma(product_mrp_value.getText().toString()));
+                        double quantity = Double.parseDouble(ValidationUtil.replacecomma(product_qty_value.getText().toString()));
+                        double sellPercentage = Double.parseDouble(ValidationUtil.replacecomma(sell_percent_value.getText().toString()));
+                        double totalPrice = (oldMrp * quantity) - ((sellPercentage * oldMrp * quantity) / 100);
+                        sell_price_value.setText(String.valueOf(totalPrice));
+                    } catch (Exception e) {
+                        DialogCustom.showErrorMessage(StockOut.this, e.getMessage());
+                    }
                 }
 
             }
@@ -267,40 +273,77 @@ public class StockOut extends AutoLogout {
                     String stockflg = "OUT";
                     String flag = "Y";
                     String updateBy = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
-
-                    Stock stock = new Stock(id, productName, productId, date, color, productMrp, productPercent, productQty.trim(), previousStock, stockflg, flag, updateBy);
+                    String sellPercent = sell_percent_value.getText().toString().trim();
+                    String totalPrice = sell_price_value.getText().toString().trim();
+                    Stock stock = new Stock(id, productName, productId, date, color, productMrp, productPercent, productQty.trim(), sellPercent, totalPrice, flag, updateBy);
+                    Sell sell = new Sell(id, productName, productId, date, color, productMrp, productPercent, productQty.trim(), previousStock, stockflg, flag, updateBy);
 
                     final LoadingDialog loadingDialog = new LoadingDialog(StockOut.this);
                     loadingDialog.startDialoglog();
-                    try {
-                        assert id != null;
-                        databaseReferenceStock.child(id)
-                                .setValue(stock)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            product_qty_value.setText("");
-                                            loadingDialog.dismisstDialoglog();
-                                            DialogCustom.showSuccessMessage(StockOut.this, "Your Product Stock In Successfully.");
-
-
-                                        } else {
-                                            DialogCustom.showErrorMessage(StockOut.this, task.getResult() + "Unsuccessful");
-                                            loadingDialog.dismisstDialoglog();
-
-                                        }
-                                        loadingDialog.dismisstDialoglog();
-                                    }
-                                });
-                    } catch (Exception e) {
-                        DialogCustom.showErrorMessage(StockOut.this, e.getMessage());
-                    }
+                    stockOut(id, stock, sell);
 
                 }
             }
         });
 
+    }
+
+    private void stockOut(String id, Stock stock, Sell sell) {
+        try {
+            assert id != null;
+            databaseReferenceStock.child(id)
+                    .setValue(stock)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                // product_qty_value.setText("");
+                                //  sell_percent_value.setText("");
+                                // sell_price_value.setText("");
+                                // loadingDialog.dismisstDialoglog();
+                                // DialogCustom.showSuccessMessage(StockOut.this, "Your Product Stock In Successfully.");
+                                sellProduct(id, sell);
+
+                            } else {
+                                DialogCustom.showErrorMessage(StockOut.this, task.getResult() + "Unsuccessful");
+                                loadingDialog.dismisstDialoglog();
+
+                            }
+                            loadingDialog.dismisstDialoglog();
+                        }
+                    });
+        } catch (Exception e) {
+            DialogCustom.showErrorMessage(StockOut.this, e.getMessage());
+        }
+    }
+
+    private void sellProduct(String id, Sell sell) {
+        try {
+            assert id != null;
+            databaseReferenceSell.child(id)
+                    .setValue(sell)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                product_qty_value.setText("");
+                                sell_percent_value.setText("");
+                                sell_price_value.setText("");
+                                loadingDialog.dismisstDialoglog();
+                                DialogCustom.showSuccessMessage(StockOut.this, "Your Product Stock Out Successfully.");
+
+
+                            } else {
+                                DialogCustom.showErrorMessage(StockOut.this, task.getResult() + "Unsuccessful");
+                                loadingDialog.dismisstDialoglog();
+
+                            }
+                            loadingDialog.dismisstDialoglog();
+                        }
+                    });
+        } catch (Exception e) {
+            DialogCustom.showErrorMessage(StockOut.this, e.getMessage());
+        }
     }
 
     private void getProductList() {
