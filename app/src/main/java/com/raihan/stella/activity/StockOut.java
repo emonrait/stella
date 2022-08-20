@@ -308,7 +308,7 @@ public class StockOut extends AutoLogout {
                                 loadingDialog.dismisstDialoglog();
 
                             }
-                            loadingDialog.dismisstDialoglog();
+                           // loadingDialog.dismisstDialoglog();
                         }
                     });
         } catch (Exception e) {

@@ -99,6 +99,7 @@ public class StatetmentActivity extends AutoLogout {
 
         tabLayout.addTab(tabLayout.newTab().setText("Stock In"));
         tabLayout.addTab(tabLayout.newTab().setText("Stock Out"));
+        tabLayout.addTab(tabLayout.newTab().setText("Sell"));
         tabLayout.addTab(tabLayout.newTab().setText("Collection"));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -121,6 +122,14 @@ public class StatetmentActivity extends AutoLogout {
                     }
 
                 } else if (tab.getPosition() == 2) {
+
+                    if (!DialogCustom.isOnline(StatetmentActivity.this)) {
+                        DialogCustom.showInternetConnectionMessage(StatetmentActivity.this);
+                    } else {
+                        getTranastionList();
+                    }
+
+                }else if (tab.getPosition() == 3) {
 
                     if (!DialogCustom.isOnline(StatetmentActivity.this)) {
                         DialogCustom.showInternetConnectionMessage(StatetmentActivity.this);
