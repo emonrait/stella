@@ -184,13 +184,13 @@ public class StockIn extends AutoLogout {
                     color_value.requestFocus();
                     DialogCustom.showErrorMessage(StockIn.this, "Please Enter Product Color.");
 
-                } else if (product_mrp_value.getText().toString().trim().isEmpty()) {
+                } else if (product_mrp_value.getText().toString().trim().isEmpty()||product_mrp_value.getText().toString().trim().equals("0")) {
                     product_mrp_value.requestFocus();
-                    DialogCustom.showErrorMessage(StockIn.this, "Please Enter Product MRP Value.");
+                    DialogCustom.showErrorMessage(StockIn.this, "Please Update Product MRP Value in Product Master.");
 
-                } else if (product_percentage_value.getText().toString().trim().isEmpty()) {
+                } else if (product_percentage_value.getText().toString().trim().isEmpty()||product_percentage_value.getText().toString().trim().equals("0")) {
                     product_percentage_value.requestFocus();
-                    DialogCustom.showErrorMessage(StockIn.this, "Please Enter Product Percentage Value.");
+                    DialogCustom.showErrorMessage(StockIn.this, "Please Update Product Percentage Value in Product Master.");
 
                 } else if (product_qty_value.getText().toString().trim().isEmpty()) {
                     product_qty_value.requestFocus();
