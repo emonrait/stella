@@ -138,6 +138,8 @@
     <string name="previous_stock">Previous Stock</string>
     <string name="product_quantity">Product Quantity</string>
     <string name="stock_out">Stock Out</string>
+    <string name="sell_percentage">Sell Percentage</string>
+    <string name="sell_price">Sell Price</string>
 
 
     <string-array name="spinnerItems">

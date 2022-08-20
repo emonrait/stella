@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -51,6 +53,8 @@ public class StockOut extends AutoLogout {
     private EditText product_mrp_value;
     private EditText product_percentage_value;
     private EditText product_qty_value;
+    private EditText sell_percent_value;
+    private EditText sell_price_value;
     private Button btnStockOut;
     private Spinner id_value;
     final Calendar myCalendar = Calendar.getInstance();
@@ -96,6 +100,8 @@ public class StockOut extends AutoLogout {
         id_value = findViewById(R.id.id_value);
         product_percentage_value = findViewById(R.id.product_percentage_value);
         product_qty_value = findViewById(R.id.product_qty_value);
+        sell_percent_value = findViewById(R.id.sell_percent_value);
+        sell_price_value = findViewById(R.id.sell_price_value);
 
 
         spinerList = new ArrayList<>();
@@ -166,6 +172,51 @@ public class StockOut extends AutoLogout {
             }
         });
 
+        sell_percent_value.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (product_qty_value.getText().toString().isEmpty()) {
+                    product_qty_value.requestFocus();
+                    DialogCustom.showErrorMessage(StockOut.this, "Please Enter Product Quantity");
+
+                } else if (product_qty_value.getText().toString().equals("0")) {
+                    product_qty_value.requestFocus();
+                    DialogCustom.showErrorMessage(StockOut.this, "Please Enter Valid Product Quantity");
+
+                } else if (sell_percent_value.getText().toString().equals("0")) {
+                    sell_percent_value.requestFocus();
+                    DialogCustom.showErrorMessage(StockOut.this, "Please Enter Product Sell Percentage");
+
+                }else if (sell_percent_value.getText().toString().isEmpty()) {
+                    sell_percent_value.requestFocus();
+                    DialogCustom.showErrorMessage(StockOut.this, "Please Enter Product Sell Percentage");
+
+                } else {
+                  try {
+                      double oldMrp = Double.parseDouble(ValidationUtil.replacecomma(product_mrp_value.getText().toString()));
+                      double quantity = Double.parseDouble(ValidationUtil.replacecomma(product_qty_value.getText().toString()));
+                      double sellPercentage = Double.parseDouble(ValidationUtil.replacecomma(sell_percent_value.getText().toString()));
+                      double totalPrice = (oldMrp * quantity) - ((sellPercentage * oldMrp * quantity) / 100);
+                      sell_price_value.setText(String.valueOf(totalPrice));
+                  }catch (Exception e){
+                      DialogCustom.showErrorMessage(StockOut.this,e.getMessage());
+                  }
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
         btnStockOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,7 +244,7 @@ public class StockOut extends AutoLogout {
                     product_qty_value.requestFocus();
                     DialogCustom.showErrorMessage(StockOut.this, "Please Enter Product Quantity.");
 
-                }else if (product_qty_value.getText().toString().trim().equals("0")) {
+                } else if (product_qty_value.getText().toString().trim().equals("0")) {
                     product_qty_value.requestFocus();
                     DialogCustom.showErrorMessage(StockOut.this, "Please Enter Valid Product Quantity.");
 

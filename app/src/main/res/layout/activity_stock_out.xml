@@ -32,7 +32,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_10"
                     android:orientation="vertical"
                     android:visibility="visible">
@@ -322,6 +322,69 @@
                                             android:textColor="@color/black" />
 
                                     </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="50dp"
+                                        android:gravity="center_horizontal"
+                                        android:orientation="horizontal"
+                                        android:padding="@dimen/padding_5"
+                                        android:weightSum="2">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight="1.2"
+                                            android:gravity="center_vertical"
+                                            android:text="@string/sell_percentage"
+                                            android:textColor="@color/black" />
+
+                                        <EditText
+                                            android:id="@+id/sell_percent_value"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight=".8"
+                                            android:background="@drawable/rectangale"
+                                            android:gravity="center"
+                                            android:hint="@string/sell_percentage"
+                                            android:inputType="numberDecimal"
+                                            android:textColor="@color/black" />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="50dp"
+                                        android:gravity="center_horizontal"
+                                        android:orientation="horizontal"
+                                        android:padding="@dimen/padding_5"
+                                        android:weightSum="2">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight="1.2"
+                                            android:gravity="center_vertical"
+                                            android:text="@string/sell_price"
+                                            android:textColor="@color/black" />
+
+                                        <EditText
+                                            android:id="@+id/sell_price_value"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight=".8"
+                                            android:background="@drawable/rectangale"
+                                            android:clickable="false"
+                                            android:cursorVisible="false"
+                                            android:focusable="false"
+                                            android:focusableInTouchMode="false"
+                                            android:gravity="center"
+                                            android:hint="@string/sell_price"
+                                            android:inputType="numberDecimal"
+                                            android:textColor="@color/black" />
+
+                                    </LinearLayout>
+
                                 </LinearLayout>
 
                                 <Button
