@@ -275,10 +275,9 @@ public class StockOut extends AutoLogout {
                     String updateBy = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
                     String sellPercent = sell_percent_value.getText().toString().trim();
                     String totalPrice = sell_price_value.getText().toString().trim();
-                    Stock stock = new Stock(id, productName, productId, date, color, productMrp, productPercent, productQty.trim(), sellPercent, totalPrice, flag, updateBy);
-                    Sell sell = new Sell(id, productName, productId, date, color, productMrp, productPercent, productQty.trim(), previousStock, stockflg, flag, updateBy);
+                    Sell sell = new Sell(id, productName, productId, date, color, productMrp, productPercent, productQty.trim(), sellPercent, totalPrice, flag, updateBy);
+                    Stock stock = new Stock(id, productName, productId, date, color, productMrp, productPercent, productQty.trim(), previousStock, stockflg, flag, updateBy);
 
-                    final LoadingDialog loadingDialog = new LoadingDialog(StockOut.this);
                     loadingDialog.startDialoglog();
                     stockOut(id, stock, sell);
 
@@ -331,7 +330,7 @@ public class StockOut extends AutoLogout {
                                 sell_price_value.setText("");
                                 loadingDialog.dismisstDialoglog();
                                 DialogCustom.showSuccessMessage(StockOut.this, "Your Product Stock Out Successfully.");
-
+                                loadingDialog.dismisstDialoglog();
 
                             } else {
                                 DialogCustom.showErrorMessage(StockOut.this, task.getResult() + "Unsuccessful");
