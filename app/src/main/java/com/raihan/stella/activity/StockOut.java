@@ -193,6 +193,10 @@ public class StockOut extends AutoLogout {
                     product_qty_value.requestFocus();
                     DialogCustom.showErrorMessage(StockOut.this, "Please Enter Product Quantity.");
 
+                }else if (product_qty_value.getText().toString().trim().equals("0")) {
+                    product_qty_value.requestFocus();
+                    DialogCustom.showErrorMessage(StockOut.this, "Please Enter Valid Product Quantity.");
+
                 } else if (Double.parseDouble(previous_stock_value.getText().toString().trim()) < Double.parseDouble(product_qty_value.getText().toString().trim())) {
                     product_qty_value.requestFocus();
                     DialogCustom.showErrorMessage(StockOut.this, "You Enter Product Quantity Getter Than Stock Quantity.");

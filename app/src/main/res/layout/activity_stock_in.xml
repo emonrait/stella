@@ -33,7 +33,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_marginTop="@dimen/margin_30"
+                    android:layout_marginTop="@dimen/margin_10"
                     android:orientation="vertical"
                     android:visibility="visible">
 
@@ -283,13 +283,13 @@
                                             android:layout_height="match_parent"
                                             android:layout_weight=".8"
                                             android:background="@drawable/rectangale"
-                                            android:gravity="center"
-                                            android:hint="@string/product_percentage"
-                                            android:inputType="numberDecimal"
                                             android:clickable="false"
                                             android:cursorVisible="false"
                                             android:focusable="false"
                                             android:focusableInTouchMode="false"
+                                            android:gravity="center"
+                                            android:hint="@string/product_percentage"
+                                            android:inputType="numberDecimal"
                                             android:textColor="@color/black" />
 
                                     </LinearLayout>

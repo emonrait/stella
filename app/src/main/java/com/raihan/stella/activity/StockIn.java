@@ -196,6 +196,10 @@ public class StockIn extends AutoLogout {
                     product_qty_value.requestFocus();
                     DialogCustom.showErrorMessage(StockIn.this, "Please Enter Product Quantity.");
 
+                }else if (product_qty_value.getText().toString().trim().equals("0")) {
+                    product_qty_value.requestFocus();
+                    DialogCustom.showErrorMessage(StockIn.this, "Please Enter Valid Product Quantity.");
+
                 } else if (!DialogCustom.isOnline(StockIn.this)) {
                     DialogCustom.showInternetConnectionMessage(StockIn.this);
 
