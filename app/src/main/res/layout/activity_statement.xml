@@ -38,14 +38,14 @@
                     android:layout_marginTop="@dimen/margin_10"
                     android:background="@android:color/transparent"
                     android:nestedScrollingEnabled="true"
-                    android:scrollbarThumbVertical="@color/black"
+                    android:scrollbarThumbVertical="@color/colorPrimary"
                     android:textAlignment="center"
                     app:tabGravity="center"
                     app:tabIndicatorAnimationDuration="1"
-                    app:tabIndicatorColor="@color/black"
+                    app:tabIndicatorColor="@color/colorPrimary"
                     app:tabMode="scrollable"
-                    app:tabSelectedTextColor="@color/black"
-                    app:tabTextColor="@color/black" />
+                    app:tabSelectedTextColor="@color/colorPrimary"
+                    app:tabTextColor="@color/colorPrimary" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyler"

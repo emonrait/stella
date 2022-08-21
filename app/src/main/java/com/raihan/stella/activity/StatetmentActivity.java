@@ -30,7 +30,11 @@ import com.raihan.stella.model.GlobalVariable;
 import com.raihan.stella.model.ListItem;
 import com.raihan.stella.model.LogoutService;
 import com.raihan.stella.model.MyAdpterNew;
+import com.raihan.stella.model.Sell;
+import com.raihan.stella.model.SellAdapter;
 import com.raihan.stella.model.StatementListAdapter;
+import com.raihan.stella.model.StatementStockAdapter;
+import com.raihan.stella.model.Stock;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -39,6 +43,8 @@ public class StatetmentActivity extends AutoLogout {
     GlobalVariable globalVariable;
     RecyclerView recyclerView;
     StatementListAdapter statementListAdapter;
+    StatementStockAdapter statementStockAdapter;
+    SellAdapter sellAdapter;
     FirebaseUser user;
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReferenceTransaction;
@@ -53,6 +59,8 @@ public class StatetmentActivity extends AutoLogout {
 
 
     ArrayList<ListItem> listdata = new ArrayList<>();
+    ArrayList<Sell> selldata = new ArrayList<>();
+    ArrayList<Stock> stockIn = new ArrayList<>();
     LoadingDialog loadingDialog = new LoadingDialog(this);
 
 
@@ -208,30 +216,47 @@ public class StatetmentActivity extends AutoLogout {
     }
 
     private void getAllStockIn() {
-        listdata.clear();
+        stockIn.clear();
         loadingDialog.startDialoglog();
         databaseReferenceStock.orderByChild("stockflg").equalTo("IN").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
                     if (ds.exists() && ds.child("flag").getValue().equals("Y")) {
-                        String txn = ds.child("id").getValue(String.class);
+                        String id = ds.child("id").getValue(String.class);
+                        String productName = ds.child("productName").getValue(String.class);
+                        String productId = ds.child("productId").getValue(String.class);
                         String date = ds.child("date").getValue(String.class);
-                        String amo = ds.child("amount").getValue(String.class);
-                        String invoice = ds.child("invoiceno").getValue(String.class);
-                        String email = ds.child("email").getValue(String.class);
+                        String color = ds.child("color").getValue(String.class);
+                        String productMrp = ds.child("productMrp").getValue(String.class);
+                        String productPercent = ds.child("productPercent").getValue(String.class);
+                        String productQty = ds.child("productQty").getValue(String.class);
+                        String previousStock = ds.child("previousStock").getValue(String.class);
+                        String flag = ds.child("flag").getValue(String.class);
+                        String stockflg = ds.child("stockflg").getValue(String.class);
+                        String updateBy = ds.child("updateBy").getValue(String.class);
                         // Log.d("TAG", date + " / "+txn);
-                        ListItem listitem = new ListItem(txn, date, amo, invoice, email);
-                        listdata.add(listitem);
+                        Stock listitem = new Stock(id,
+                                productName, productId, date, color,
+                                productMrp,
+                                productPercent,
+                                productQty,
+                                previousStock,
+                                flag,
+                                stockflg,
+                                updateBy
+                        );
+                        stockIn.add(listitem);
                         // Log.e("Data--3", listitem.getTxnid());
                     }
                     loadingDialog.dismisstDialoglog();
 
                 }
-                statementListAdapter = new StatementListAdapter(StatetmentActivity.this, listdata, new StatementListAdapter.OnItemClickListener() {
+                statementStockAdapter = new StatementStockAdapter(StatetmentActivity.this, stockIn, new StatementStockAdapter.OnItemClickListener() {
                     @Override
-                    public void onContactSelected(ListItem item) {
-                        DialogCustom.showSuccessMessage(StatetmentActivity.this, item.getAmount() + item.getEmail());
+                    public void onContactSelected(Stock item) {
+                        DialogCustom.showSuccessMessage(StatetmentActivity.this, item.getDate() + item.getProductName());
 
                     }
                 });
@@ -240,8 +265,8 @@ public class StatetmentActivity extends AutoLogout {
                 recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
                 recyclerView.setHasFixedSize(true);
 
-                recyclerView.setAdapter(statementListAdapter);
-                statementListAdapter.notifyDataSetChanged();
+                recyclerView.setAdapter(statementStockAdapter);
+                statementStockAdapter.notifyDataSetChanged();
                 loadingDialog.dismisstDialoglog();
             }
 
@@ -254,30 +279,45 @@ public class StatetmentActivity extends AutoLogout {
     }
 
     private void getAllStockOut() {
-        listdata.clear();
+        stockIn.clear();
         loadingDialog.startDialoglog();
         databaseReferenceStock.orderByChild("stockflg").equalTo("OUT").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     if (ds.exists() && ds.child("flag").getValue().equals("Y")) {
-                        String txn = ds.child("id").getValue(String.class);
+                        String id = ds.child("id").getValue(String.class);
+                        String productName = ds.child("productName").getValue(String.class);
+                        String productId = ds.child("productId").getValue(String.class);
                         String date = ds.child("date").getValue(String.class);
-                        String amo = ds.child("amount").getValue(String.class);
-                        String invoice = ds.child("invoiceno").getValue(String.class);
-                        String email = ds.child("email").getValue(String.class);
+                        String color = ds.child("color").getValue(String.class);
+                        String productMrp = ds.child("productMrp").getValue(String.class);
+                        String productPercent = ds.child("productPercent").getValue(String.class);
+                        String productQty = ds.child("productQty").getValue(String.class);
+                        String previousStock = ds.child("previousStock").getValue(String.class);
+                        String flag = ds.child("flag").getValue(String.class);
+                        String stockflg = ds.child("stockflg").getValue(String.class);
+                        String updateBy = ds.child("updateBy").getValue(String.class);
                         // Log.d("TAG", date + " / "+txn);
-                        ListItem listitem = new ListItem(txn, date, amo, invoice, email);
-                        listdata.add(listitem);
-                        // Log.e("Data--3", listitem.getTxnid());
+                        Stock listitem = new Stock(id,
+                                productName, productId, date, color,
+                                productMrp,
+                                productPercent,
+                                productQty,
+                                previousStock,
+                                flag,
+                                stockflg,
+                                updateBy
+                        );
+                        stockIn.add(listitem);
                     }
                     loadingDialog.dismisstDialoglog();
 
                 }
-                statementListAdapter = new StatementListAdapter(StatetmentActivity.this, listdata, new StatementListAdapter.OnItemClickListener() {
+                statementStockAdapter = new StatementStockAdapter(StatetmentActivity.this, stockIn, new StatementStockAdapter.OnItemClickListener() {
                     @Override
-                    public void onContactSelected(ListItem item) {
-                        DialogCustom.showSuccessMessage(StatetmentActivity.this, item.getAmount() + item.getEmail());
+                    public void onContactSelected(Stock item) {
+                        DialogCustom.showSuccessMessage(StatetmentActivity.this, item.getDate() + item.getProductName());
 
                     }
                 });
@@ -286,8 +326,8 @@ public class StatetmentActivity extends AutoLogout {
                 recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
                 recyclerView.setHasFixedSize(true);
 
-                recyclerView.setAdapter(statementListAdapter);
-                statementListAdapter.notifyDataSetChanged();
+                recyclerView.setAdapter(statementStockAdapter);
+                statementStockAdapter.notifyDataSetChanged();
                 loadingDialog.dismisstDialoglog();
             }
 
@@ -300,30 +340,46 @@ public class StatetmentActivity extends AutoLogout {
     }
 
     private void getAllSell() {
-        listdata.clear();
+        selldata.clear();
         loadingDialog.startDialoglog();
         databaseReferenceSell.orderByChild("flag").equalTo("Y").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     if (ds.exists() && Objects.equals(ds.child("flag").getValue(), "Y")) {
-                        String txn = ds.child("id").getValue(String.class);
+                        String id = ds.child("id").getValue(String.class);
+                        String productName = ds.child("productName").getValue(String.class);
+                        String productId = ds.child("productId").getValue(String.class);
                         String date = ds.child("date").getValue(String.class);
-                        String amo = ds.child("amount").getValue(String.class);
-                        String invoice = ds.child("invoiceno").getValue(String.class);
-                        String email = ds.child("email").getValue(String.class);
+                        String color = ds.child("color").getValue(String.class);
+                        String productMrp = ds.child("productMrp").getValue(String.class);
+                        String productPercent = ds.child("productPercent").getValue(String.class);
+                        String productQty = ds.child("productQty").getValue(String.class);
+                        String sellPercent = ds.child("sellPercent").getValue(String.class);
+                        String totalPrice = ds.child("totalPrice").getValue(String.class);
+                        String flag = ds.child("flag").getValue(String.class);
+                        String updateBy = ds.child("updateBy").getValue(String.class);
                         // Log.d("TAG", date + " / "+txn);
-                        ListItem listitem = new ListItem(txn, date, amo, invoice, email);
-                        listdata.add(listitem);
+                        Sell sell = new Sell(id,
+                                productName, productId, date, color,
+                                productMrp,
+                                productPercent,
+                                productQty,
+                                sellPercent,
+                                totalPrice,
+                                flag,
+                                updateBy
+                        );
+                        selldata.add(sell);
                         // Log.e("Data--3", listitem.getTxnid());
                     }
                     loadingDialog.dismisstDialoglog();
 
                 }
-                statementListAdapter = new StatementListAdapter(StatetmentActivity.this, listdata, new StatementListAdapter.OnItemClickListener() {
+                sellAdapter = new SellAdapter(StatetmentActivity.this, selldata, new SellAdapter.OnItemClickListener() {
                     @Override
-                    public void onContactSelected(ListItem item) {
-                        DialogCustom.showSuccessMessage(StatetmentActivity.this, item.getAmount() + item.getEmail());
+                    public void onContactSelected(Sell item) {
+                        DialogCustom.showSuccessMessage(StatetmentActivity.this, item.getColor() + item.getProductName());
 
                     }
                 });
@@ -332,8 +388,8 @@ public class StatetmentActivity extends AutoLogout {
                 recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
                 recyclerView.setHasFixedSize(true);
 
-                recyclerView.setAdapter(statementListAdapter);
-                statementListAdapter.notifyDataSetChanged();
+                recyclerView.setAdapter(sellAdapter);
+                sellAdapter.notifyDataSetChanged();
                 loadingDialog.dismisstDialoglog();
             }
 

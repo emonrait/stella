@@ -139,7 +139,8 @@
     <string name="product_quantity">Product Quantity</string>
     <string name="stock_out">Stock Out</string>
     <string name="sell_percentage">Sell Percentage</string>
-    <string name="sell_price">Sell Price</string>
+    <string name="sell_price">Total Price</string>
+    <string name="add_by">Update By</string>
 
 
     <string-array name="spinnerItems">
