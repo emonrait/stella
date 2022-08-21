@@ -173,15 +173,15 @@ public class StatetmentActivity extends AutoLogout {
     private void getTranastionList() {
         listdata.clear();
         loadingDialog.startDialoglog();
-        databaseReferenceTransaction.orderByChild("flg").equalTo("Y").addValueEventListener(new ValueEventListener() {
+        databaseReferenceTransaction.orderByChild("flag").equalTo("Y").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     String txn = ds.child("id").getValue(String.class);
                     String date = ds.child("date").getValue(String.class);
                     String amo = ds.child("amount").getValue(String.class);
-                    String invoice = ds.child("invoiceno").getValue(String.class);
-                    String email = ds.child("email").getValue(String.class);
+                    String invoice = ds.child("customerName").getValue(String.class);
+                    String email = ds.child("remarks").getValue(String.class);
                     // Log.d("TAG", date + " / "+txn);
                     ListItem listitem = new ListItem(txn, date, amo, invoice, email);
                     listdata.add(listitem);

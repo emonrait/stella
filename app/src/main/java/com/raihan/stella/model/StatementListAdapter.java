@@ -77,7 +77,7 @@ public class StatementListAdapter extends RecyclerView.Adapter<StatementListAdap
         holder.tv_txnid.setText(data.getId());
         holder.tv_invoiceno.setText(data.getInvoiceno());
         holder.tv_date.setText(data.getDate());
-        holder.tv_amount.setText(data.getAmount());
+        holder.tv_amount.setText(ValidationUtil.commaSeparateAmount(data.getAmount()));
         holder.btn_payment_details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
