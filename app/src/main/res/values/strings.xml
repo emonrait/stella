@@ -141,6 +141,9 @@
     <string name="sell_percentage">Sell Percentage</string>
     <string name="sell_price">Total Price</string>
     <string name="add_by">Update By</string>
+    <string name="customer_name">Customer Name</string>
+    <string name="add_collection">Add Collection</string>
+    <string name="customer_mobile_no">Customer Mobile No</string>
 
 
     <string-array name="spinnerItems">
