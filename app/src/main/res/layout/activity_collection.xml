@@ -170,76 +170,49 @@
                                             android:layout_height="match_parent"
                                             android:layout_weight="1.2"
                                             android:gravity="center_vertical"
-                                            android:text="@string/color"
+                                            android:text="@string/amount"
                                             android:textColor="@color/black" />
 
                                         <EditText
-                                            android:id="@+id/color_value"
+                                            android:id="@+id/amount_value"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent"
                                             android:layout_weight=".8"
                                             android:background="@drawable/rectangale"
                                             android:gravity="center"
-                                            android:hint="@string/color"
+                                            android:hint="@string/amount"
+                                            android:inputType="numberDecimal"
+                                            android:textColor="@color/black" />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="100dp"
+                                        android:gravity="center_horizontal"
+                                        android:orientation="horizontal"
+                                        android:padding="@dimen/padding_5"
+                                        android:weightSum="2">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight="1.2"
+                                            android:gravity="center_vertical"
+                                            android:text="@string/remarks"
+                                            android:textColor="@color/black" />
+
+                                        <EditText
+                                            android:id="@+id/remarks_value"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight=".8"
+                                            android:background="@drawable/rectangale"
+                                            android:gravity="left"
+                                            android:hint="@string/remarks"
                                             android:inputType="textCapWords"
-                                            android:textColor="@color/black" />
-
-                                    </LinearLayout>
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:gravity="center_horizontal"
-                                        android:orientation="horizontal"
-                                        android:padding="@dimen/padding_5"
-                                        android:weightSum="2">
-
-                                        <TextView
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:layout_weight="1.2"
-                                            android:gravity="center_vertical"
-                                            android:text="@string/product_mrp"
-                                            android:textColor="@color/black" />
-
-                                        <EditText
-                                            android:id="@+id/product_mrp_value"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:layout_weight=".8"
-                                            android:background="@drawable/rectangale"
-                                            android:gravity="center"
-                                            android:hint="@string/product_mrp"
-                                            android:inputType="numberDecimal"
-                                            android:textColor="@color/black" />
-
-                                    </LinearLayout>
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:gravity="center_horizontal"
-                                        android:orientation="horizontal"
-                                        android:padding="@dimen/padding_5"
-                                        android:weightSum="2">
-
-                                        <TextView
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:layout_weight="1.2"
-                                            android:gravity="center_vertical"
-                                            android:text="@string/product_percentage"
-                                            android:textColor="@color/black" />
-
-                                        <EditText
-                                            android:id="@+id/product_percentage_value"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:layout_weight=".8"
-                                            android:background="@drawable/rectangale"
-                                            android:gravity="center"
-                                            android:hint="@string/product_percentage"
-                                            android:inputType="numberDecimal"
+                                            android:minLines="3"
+                                            android:padding="@dimen/padding_5"
                                             android:textColor="@color/black" />
 
                                     </LinearLayout>

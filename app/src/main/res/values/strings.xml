@@ -144,6 +144,8 @@
     <string name="customer_name">Customer Name</string>
     <string name="add_collection">Add Collection</string>
     <string name="customer_mobile_no">Customer Mobile No</string>
+    <string name="remarks">Remarks</string>
+    <string name="amount">Amount</string>
 
 
     <string-array name="spinnerItems">
