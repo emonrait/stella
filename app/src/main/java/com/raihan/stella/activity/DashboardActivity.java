@@ -18,6 +18,7 @@ import com.raihan.stella.R;
 import com.raihan.stella.model.AutoLogout;
 import com.raihan.stella.model.DialogCustom;
 import com.raihan.stella.model.GlobalVariable;
+import com.raihan.stella.model.KeyStoreClass;
 import com.raihan.stella.model.LogoutService;
 import com.raihan.stella.model.MenuAdapter;
 import com.raihan.stella.model.MenuModel;
@@ -203,6 +204,8 @@ public class DashboardActivity extends AutoLogout {
     }
 
     private void userInfo() {
+        KeyStoreClass keyStoreClass = new KeyStoreClass();
+
         loadingDialog.startDialoglog();
         Query query = databaseReference.orderByChild("email").equalTo(user.getEmail());
         query.addValueEventListener(new ValueEventListener() {
@@ -216,7 +219,7 @@ public class DashboardActivity extends AutoLogout {
                     balance = "" + ds.child("balance").getValue();
                     url = "" + ds.child("prolink").getValue();
                     role = "" + ds.child("role").getValue();
-                    version = "" + ds.child("version").getValue();
+                    version = keyStoreClass.decrypt("" + ds.child("version").getValue());
                     Picasso.get().load(url).into(circleImageView);
                     nameTV.setText(member_name);
                     mobileTV.setText(mobile);
@@ -624,6 +627,8 @@ public class DashboardActivity extends AutoLogout {
     }
 
     private void updateversionadd() {
+        KeyStoreClass keyStoreClass = new KeyStoreClass();
+        String versionnew = keyStoreClass.encrypt(String.valueOf(BuildConfig.VERSION_CODE));
         Query editQuery = databaseReference.orderByChild("email").equalTo(user.getEmail());
 
         if (BuildConfig.VERSION_CODE > Integer.parseInt(version)) {
@@ -631,7 +636,7 @@ public class DashboardActivity extends AutoLogout {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot edtData : dataSnapshot.getChildren()) {
-                        edtData.getRef().child("version").setValue(BuildConfig.VERSION_CODE);
+                        edtData.getRef().child("version").setValue(versionnew);
                         edtData.getRef().child("deviceid").setValue(globalVariable.getDeviceid());
                         edtData.getRef().child("model").setValue(globalVariable.getModel());
 
