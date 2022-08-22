@@ -236,6 +236,7 @@ public class StatetmentActivity extends AutoLogout {
                         String flag = ds.child("flag").getValue(String.class);
                         String stockflg = ds.child("stockflg").getValue(String.class);
                         String updateBy = ds.child("updateBy").getValue(String.class);
+                        String totalPrice = ds.child("totalPrice").getValue(String.class);
                         // Log.d("TAG", date + " / "+txn);
                         Stock listitem = new Stock(id,
                                 productName, productId, date, color,
@@ -243,6 +244,7 @@ public class StatetmentActivity extends AutoLogout {
                                 productPercent,
                                 productQty,
                                 previousStock,
+                                totalPrice,
                                 flag,
                                 stockflg,
                                 updateBy
@@ -298,6 +300,7 @@ public class StatetmentActivity extends AutoLogout {
                         String flag = ds.child("flag").getValue(String.class);
                         String stockflg = ds.child("stockflg").getValue(String.class);
                         String updateBy = ds.child("updateBy").getValue(String.class);
+                        String totalPrice = ds.child("totalPrice").getValue(String.class);
                         // Log.d("TAG", date + " / "+txn);
                         Stock listitem = new Stock(id,
                                 productName, productId, date, color,
@@ -305,6 +308,7 @@ public class StatetmentActivity extends AutoLogout {
                                 productPercent,
                                 productQty,
                                 previousStock,
+                                totalPrice,
                                 flag,
                                 stockflg,
                                 updateBy

@@ -276,7 +276,7 @@ public class StockOut extends AutoLogout {
                     String sellPercent = sell_percent_value.getText().toString().trim();
                     String totalPrice = sell_price_value.getText().toString().trim();
                     Sell sell = new Sell(id, productName, productId, date, color, productMrp, productPercent, productQty.trim(), sellPercent, totalPrice, flag, updateBy);
-                    Stock stock = new Stock(id, productName, productId, date, color, productMrp, productPercent, productQty.trim(), previousStock, stockflg, flag, updateBy);
+                    Stock stock = new Stock(id, productName, productId, date, color, productMrp, productPercent, productQty.trim(), previousStock,totalPrice, stockflg, flag, updateBy);
 
                     loadingDialog.startDialoglog();
                     stockOut(id, stock, sell);

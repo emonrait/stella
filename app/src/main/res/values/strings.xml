@@ -146,6 +146,7 @@
     <string name="customer_mobile_no">Customer Mobile No</string>
     <string name="remarks">Remarks</string>
     <string name="amount">Amount</string>
+    <string name="total_price">Total Price</string>
 
 
     <string-array name="spinnerItems">

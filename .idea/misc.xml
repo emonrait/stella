@@ -49,6 +49,9 @@
         <entry key="..\:/Workspace/Friends-Unity/app/src/main/res/layout/activity_total_balance.xml" value="0.29375" />
         <entry key="..\:/Workspace/Friends-Unity/app/src/main/res/layout/activity_transaction.xml" value="0.25462962962962965" />
         <entry key="..\:/Workspace/Friends-Unity/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2564814814814815" />
+        <entry key="..\:/Workspace/Stella/app/src/main/res/layout/activity_main.xml" value="0.27291666666666664" />
+        <entry key="..\:/Workspace/Stella/app/src/main/res/layout/activity_stock_in.xml" value="0.27291666666666664" />
+        <entry key="..\:/Workspace/Stella/app/src/main/res/layout/activity_stock_out.xml" value="0.27291666666666664" />
         <entry key="app/src/main/res/drawable/back.xml" value="0.18" />
         <entry key="app/src/main/res/drawable/bg_gradient.xml" value="0.201" />
         <entry key="app/src/main/res/drawable/bt_background_rounded_green.xml" value="0.173" />
@@ -64,7 +67,6 @@
         <entry key="app/src/main/res/drawable/shape.xml" value="0.211" />
         <entry key="app/src/main/res/layout/activity_about.xml" value="0.22291666666666668" />
         <entry key="app/src/main/res/layout/activity_all_txn_list.xml" value="0.3098958333333333" />
-        <entry key="app/src/main/res/layout/activity_collection.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/activity_condition.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/activity_contact.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/activity_dashboard.xml" value="0.22291666666666668" />
@@ -90,10 +92,8 @@
         <entry key="app/src/main/res/layout/picture.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/row_fundtransfer_menu.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/row_report_listviewall.xml" value="0.3098958333333333" />
-        <entry key="app/src/main/res/layout/row_sell_product.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/row_statement_listview.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/row_statement_listviewall.xml" value="0.2953125" />
-        <entry key="app/src/main/res/layout/row_statement_product.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/test_dialog.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/menu/nav_drawer_menu.xml" value="0.2578125" />
       </map>

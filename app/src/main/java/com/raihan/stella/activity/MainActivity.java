@@ -1,6 +1,9 @@
 package com.raihan.stella.activity;
 
+import static com.raihan.stella.R.color.colorPrimary;
+
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +21,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -77,11 +81,13 @@ public class MainActivity extends CustomKeyboardHide {
     FirebaseDatabase firebaseDatabase;
     GlobalVariable globalVariable;
 
+    @SuppressLint("ResourceAsColor")
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{
                 Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CALL_PHONE}, PackageManager.PERMISSION_GRANTED);
@@ -104,14 +110,14 @@ public class MainActivity extends CustomKeyboardHide {
         globalVariable = ((GlobalVariable) getApplicationContext());
         globalVariable.setNewversioncode(String.valueOf(BuildConfig.VERSION_CODE));
         globalVariable.setVersionName(BuildConfig.VERSION_NAME);
-       // globalVariable.setDeviceid(ValidationUtil.getDeviceId(this));
+        // globalVariable.setDeviceid(ValidationUtil.getDeviceId(this));
         globalVariable.setModel(ValidationUtil.getDeviceName());
 
         if (!checkPermission()) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{
                     Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.CALL_PHONE}, PackageManager.PERMISSION_GRANTED);
 
-        }else {
+        } else {
             globalVariable.setDeviceid(ValidationUtil.getDeviceId(this));
         }
 
@@ -201,11 +207,17 @@ public class MainActivity extends CustomKeyboardHide {
 
             }
         });
-        savelogin = sharedPreferences.getBoolean("savelogin", true);
+        /*savelogin = sharedPreferences.getBoolean("savelogin", true);
         if (savelogin) {
             emailTV.setText(sharedPreferences.getString("username", null));
             passwordTV.setText(sharedPreferences.getString("password", null));
-        }
+        }else{
+            emailTV.setText("mdmuradcu100@gmail.com");
+            passwordTV.setText("TDB&273YH&");
+        }*/
+
+        emailTV.setText("mdmuradcu100@gmail.com");
+        passwordTV.setText("TDB&273YH&");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 

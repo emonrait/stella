@@ -10,11 +10,12 @@ public class Stock {
     String productPercent="";
     String productQty="";
     String previousStock="";
+    String totalPrice="";
     String flag="";
     String stockflg="";
     String updateBy="";
 
-    public Stock(String id, String productName, String productId, String date, String color, String productMrp, String productPercent, String productQty, String previousStock,String stockflg, String flag, String updateBy) {
+    public Stock(String id, String productName, String productId, String date, String color, String productMrp, String productPercent, String productQty, String previousStock,String totalPrice,String stockflg, String flag, String updateBy) {
         this.id = id;
         this.productName = productName;
         this.productId = productId;
@@ -24,6 +25,7 @@ public class Stock {
         this.productPercent = productPercent;
         this.productQty = productQty;
         this.previousStock = previousStock;
+        this.totalPrice = totalPrice;
         this.flag = flag;
         this.stockflg = stockflg;
         this.updateBy = updateBy;
@@ -126,5 +128,13 @@ public class Stock {
 
     public void setStockflg(String stockflg) {
         this.stockflg = stockflg;
+    }
+
+    public String getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(String totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

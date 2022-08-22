@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -53,6 +55,7 @@ public class StockIn extends AutoLogout {
     private EditText product_mrp_value;
     private EditText product_percentage_value;
     private EditText product_qty_value;
+    private EditText product_total_price_value;
     private Button btnStockIn;
     private Spinner id_value;
     final Calendar myCalendar = Calendar.getInstance();
@@ -99,6 +102,7 @@ public class StockIn extends AutoLogout {
         id_value = findViewById(R.id.id_value);
         product_percentage_value = findViewById(R.id.product_percentage_value);
         product_qty_value = findViewById(R.id.product_qty_value);
+        product_total_price_value = findViewById(R.id.product_total_price_value);
 
 
         spinerList = new ArrayList<>();
@@ -160,6 +164,7 @@ public class StockIn extends AutoLogout {
                 } else {
                     getProductInfo();
                     getPreviousStock();
+
                 }
 
             }
@@ -168,6 +173,52 @@ public class StockIn extends AutoLogout {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+
+
+        product_qty_value.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (product_percentage_value.getText().toString().equals("0")) {
+                    product_percentage_value.requestFocus();
+                    DialogCustom.showErrorMessage(StockIn.this, "Please Update Product Percentage Value in Product Master.");
+
+                } else if (product_percentage_value.getText().toString().isEmpty()) {
+                    product_percentage_value.requestFocus();
+                    DialogCustom.showErrorMessage(StockIn.this, "Please Update Product Percentage Value in Product Master.");
+
+                } else if (product_qty_value.getText().toString().isEmpty()) {
+                    product_qty_value.requestFocus();
+                    DialogCustom.showErrorMessage(StockIn.this, "Please Enter Product Quantity");
+
+                } else if (product_qty_value.getText().toString().equals("0")) {
+                    product_qty_value.requestFocus();
+                    DialogCustom.showErrorMessage(StockIn.this, "Please Enter Valid Product Quantity");
+
+                } else {
+                    try {
+                        double oldMrp = Double.parseDouble(ValidationUtil.replacecomma(product_mrp_value.getText().toString()));
+                        double quantity = Double.parseDouble(ValidationUtil.replacecomma(product_qty_value.getText().toString()));
+                        double sellPercentage = Double.parseDouble(ValidationUtil.replacecomma(product_percentage_value.getText().toString()));
+                        double totalPrice = (oldMrp * quantity) - ((sellPercentage * oldMrp * quantity) / 100);
+                        product_total_price_value.setText(String.valueOf(totalPrice));
+                    } catch (Exception e) {
+                        DialogCustom.showErrorMessage(StockIn.this, e.getMessage());
+                    }
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
 
         btnStockIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,11 +235,11 @@ public class StockIn extends AutoLogout {
                     color_value.requestFocus();
                     DialogCustom.showErrorMessage(StockIn.this, "Please Enter Product Color.");
 
-                } else if (product_mrp_value.getText().toString().trim().isEmpty()||product_mrp_value.getText().toString().trim().equals("0")) {
+                } else if (product_mrp_value.getText().toString().trim().isEmpty() || product_mrp_value.getText().toString().trim().equals("0")) {
                     product_mrp_value.requestFocus();
                     DialogCustom.showErrorMessage(StockIn.this, "Please Update Product MRP Value in Product Master.");
 
-                } else if (product_percentage_value.getText().toString().trim().isEmpty()||product_percentage_value.getText().toString().trim().equals("0")) {
+                } else if (product_percentage_value.getText().toString().trim().isEmpty() || product_percentage_value.getText().toString().trim().equals("0")) {
                     product_percentage_value.requestFocus();
                     DialogCustom.showErrorMessage(StockIn.this, "Please Update Product Percentage Value in Product Master.");
 
@@ -196,7 +247,7 @@ public class StockIn extends AutoLogout {
                     product_qty_value.requestFocus();
                     DialogCustom.showErrorMessage(StockIn.this, "Please Enter Product Quantity.");
 
-                }else if (product_qty_value.getText().toString().trim().equals("0")) {
+                } else if (product_qty_value.getText().toString().trim().equals("0")) {
                     product_qty_value.requestFocus();
                     DialogCustom.showErrorMessage(StockIn.this, "Please Enter Valid Product Quantity.");
 
@@ -213,11 +264,12 @@ public class StockIn extends AutoLogout {
                     String productPercent = product_percentage_value.getText().toString().trim();
                     String productQty = "+" + product_qty_value.getText().toString().trim();
                     String previousStock = previous_stock_value.getText().toString().trim();
+                    String totalPrice = product_total_price_value.getText().toString().trim();
                     String stockflg = "IN";
                     String flag = "Y";
                     String updateBy = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
 
-                    Stock stock = new Stock(id, productName, productId, date, color, productMrp, productPercent, productQty.trim(), previousStock, stockflg, flag, updateBy);
+                    Stock stock = new Stock(id, productName, productId, date, color, productMrp, productPercent, productQty.trim(), previousStock, totalPrice, stockflg, flag, updateBy);
 
                     final LoadingDialog loadingDialog = new LoadingDialog(StockIn.this);
                     loadingDialog.startDialoglog();
@@ -368,6 +420,8 @@ public class StockIn extends AutoLogout {
 
                     }
                     globalVariable.setTotalAmount(String.valueOf(total));
+                    product_qty_value.setText("");
+                    product_total_price_value.setText("");
                 }
 
                 @Override
