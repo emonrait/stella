@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -16,80 +17,87 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.raihan.stella.activity.LogOutTimerUtil;
 import com.raihan.stella.activity.MainActivity;
 
+import java.util.Calendar;
+import java.util.Date;
 
-public class AutoLogout extends AppCompatActivity implements View.OnTouchListener {
+
+public class AutoLogout extends AppCompatActivity implements View.OnTouchListener, LogOutTimerUtil.LogOutListener {
 
     public Runnable mRunnable;
     public Handler mHandler;
-    private long mTime = 3 * 60 * 1000;
+    // private long mTime = 3 * 60 * 1000;
     private int count;
+    Activity activity;
+    private Boolean isPause = false;
+    private Date pauseTime;
+    private Date currentTime;
+    long pasusMillisecon = 0L;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Intent intent = new Intent(this, MainActivity.class);
-        mHandler = new Handler(Looper.getMainLooper());
-
-        mRunnable = () -> {
-            count++;
-            if (count == 1) {
-                Toast.makeText(getApplicationContext(),
-                        "User inactive for" + String.valueOf(new long[]{mTime / 1000}) + "secs!",
-                        Toast.LENGTH_SHORT).show();
-                Log.e("Called-------", String.valueOf(mTime));
-                stopHandler();
-                //startActivity(intent)
-                DialogCustom.doClearActivityWithSession(intent, this);
-            }
-            stopHandler();
-        };
-        startHandler();
-
-        //startActivity(intent);
-
-
-    }
 
     @Override
     public void onUserInteraction() {
-        stopHandler();
-        startHandler();
         super.onUserInteraction();
+        //globalVariable.pauseTime = 0;
+
+        LogOutTimerUtil.startLogoutTimer(this, this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LogOutTimerUtil.startLogoutTimer(this, this);
     }
 
     @Override
     protected void onPause() {
-        stopHandler();
         super.onPause();
+        isPause = true;
+        long time = System.currentTimeMillis();
+        pauseTime = Calendar.getInstance().getTime();
+        pasusMillisecon = System.currentTimeMillis();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        startHandler();
+        if (isPause) {
+            isPause = false;
+            // var currentTime = System.currentTimeMillis()
+            currentTime = Calendar.getInstance().getTime();
+
+            // val diffInMs: Long = currentTime.getTime() - pauseTime.getTime()
+            long difm = System.currentTimeMillis() - pasusMillisecon;
+            //   resumeTime.
+            //  val difi = resumeTime - pauseTime
+            // Log.e("idl time onResume-->",diffInMs.toString())
+            //  val diffInSec: Long = TimeUnit.MILLISECONDS.toSeconds(diffInMs)
+            // Log.e("idl diffInSec resume-->",diffInSec.toString())
+            Intent intent = new Intent(this, MainActivity.class);
+            // CustomActivityClear.logoutExpireTime(intent, this, difm, LogOutTimerUtil.LOGOUT_TIME)
+
+            if (!isFinishing()) {
+                try {
+                    DialogCustom.logoutExpireTime(
+                            intent,
+                            this,
+                            difm,
+                            LogOutTimerUtil.LOGOUT_TIME
+                    );
+                } catch (WindowManager.BadTokenException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
     }
 
-    // start handler function
-    private void startHandler() {
-        mHandler.postDelayed(mRunnable, mTime);
-    }
-
-    // stop handler function
-    private void stopHandler() {
-        mHandler.removeCallbacks(mRunnable);
-    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // Removes the handler callbacks (if any)
-        stopHandler();
-        // Runs the handler (for the specified time)
-        // If any touch or motion is detected before
-        // the specified time, this override function is again called
-        startHandler();
+
         return super.onTouchEvent(event);
     }
 
@@ -120,5 +128,42 @@ public class AutoLogout extends AppCompatActivity implements View.OnTouchListene
             InputMethodManager imm = (InputMethodManager) getSystemService(activity.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
         }
+    }
+
+    @Override
+    public void doLogout() {
+        Intent intent = new Intent(this, MainActivity.class);
+        Activity activity = this;
+       /* mHandler = new Handler(Looper.getMainLooper());
+
+        mRunnable = () -> {
+            count++;
+            if (count == 1) {
+                Toast.makeText(getApplicationContext(),
+                        "User inactive for" + String.valueOf(new long[]{mTime / 1000}) + "secs!",
+                        Toast.LENGTH_SHORT).show();
+                Log.e("Called-------", String.valueOf(mTime));
+                stopHandler();
+                //startActivity(intent)
+                DialogCustom.doClearActivityWithSession(intent, this);
+            }
+            stopHandler();
+        };
+        startHandler();*/
+
+        //startActivity(intent);
+
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing()) {
+                    try {
+                        DialogCustom.doClearActivityWithSession(intent, activity);
+                    } catch (WindowManager.BadTokenException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 }

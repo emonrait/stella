@@ -48,6 +48,26 @@ public class DialogCustom {
         return progressDrawable;
     }
 
+    public static void logoutExpireTime(Intent intent, Activity activity, Long diffInMs, int logoutTime) {
+
+        //Log.e("erra logoutExpireTime","indie****")
+        // Log.e("idl exeper **","logout****"+ logoutTime)
+        //  Log.e("idl diffInMs-->",diffInMs.toString())
+
+        if (diffInMs > logoutTime) {
+            String message = "Your Active Session is Expired! Please login Again.";
+                /*intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                activity.startActivity(intent)
+                activity.finish()*/
+            doClearActivityWithSession(intent, activity);
+
+        }
+
+
+    }
+
 
     public static void customlogout(Activity activity) {
 
