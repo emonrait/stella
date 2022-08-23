@@ -219,7 +219,8 @@ public class DashboardActivity extends AutoLogout {
                     balance = "" + ds.child("balance").getValue();
                     url = "" + ds.child("prolink").getValue();
                     role = "" + ds.child("role").getValue();
-                    version = keyStoreClass.decrypt("" + ds.child("version").getValue());
+                   // version = keyStoreClass.decrypt("" + ds.child("version").getValue());
+                    version ="" + ds.child("version").getValue();
                     Picasso.get().load(url).into(circleImageView);
                     nameTV.setText(member_name);
                     mobileTV.setText(mobile);
@@ -636,7 +637,7 @@ public class DashboardActivity extends AutoLogout {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot edtData : dataSnapshot.getChildren()) {
-                        edtData.getRef().child("version").setValue(versionnew);
+                        edtData.getRef().child("version").setValue(String.valueOf(BuildConfig.VERSION_CODE));
                         edtData.getRef().child("deviceid").setValue(globalVariable.getDeviceid());
                         edtData.getRef().child("model").setValue(globalVariable.getModel());
 
