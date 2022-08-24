@@ -101,7 +101,9 @@
                     android:id="@+id/recylerReport"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_margin="@dimen/margin_5" />
+                <include layout="@layout/row_report_listviewall"/>
 
 
             </LinearLayout>
