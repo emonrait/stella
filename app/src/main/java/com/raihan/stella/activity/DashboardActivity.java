@@ -219,8 +219,8 @@ public class DashboardActivity extends AutoLogout {
                     balance = "" + ds.child("balance").getValue();
                     url = "" + ds.child("prolink").getValue();
                     role = "" + ds.child("role").getValue();
-                   // version = keyStoreClass.decrypt("" + ds.child("version").getValue());
-                    version ="" + ds.child("version").getValue();
+                    // version = keyStoreClass.decrypt("" + ds.child("version").getValue());
+                    version = "" + ds.child("version").getValue();
                     Picasso.get().load(url).into(circleImageView);
                     nameTV.setText(member_name);
                     mobileTV.setText(mobile);
