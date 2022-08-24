@@ -12,13 +12,18 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.firebase.database.Query;
 import com.raihan.stella.R;
 import com.raihan.stella.model.AutoLogout;
 import com.raihan.stella.model.DialogCustom;
+import com.raihan.stella.model.GlobalVariable;
 import com.raihan.stella.model.Report;
 import com.raihan.stella.model.ReportListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,38 +38,47 @@ import com.raihan.stella.model.ValidationUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Map;
+import java.util.Objects;
 
 public class ReportActivity extends AutoLogout {
-    DatabaseReference reference;
-    RecyclerView recylerReport;
-    ReportListAdapter reportListAdapter;
-    FirebaseDatabase fbd;
-    FirebaseUser user;
+    GlobalVariable globalVariable;
     FirebaseAuth firebaseAuth;
-    String check;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReferenceStock;
+    DatabaseReference databaseReferenceProduct;
+
     private ImageView ivLogout;
     private ImageView ivBack;
     private TextView tv_genereal_header_title;
-    private EditText input_name;
+    RecyclerView recylerReport;
+    private Spinner id_value;
+
     ArrayList<Report> listdata = new ArrayList<>();
+    ReportListAdapter reportListAdapter;
+    ValueEventListener listener;
+    ArrayList<String> spinerList = new ArrayList<>();
+    ArrayAdapter<String> adapter;
+
     LoadingDialog loadingDialog = new LoadingDialog(this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
+        globalVariable = ((GlobalVariable) getApplicationContext());
 
         ivLogout = findViewById(R.id.ivLogout);
         ivBack = findViewById(R.id.ivBack);
         tv_genereal_header_title = findViewById(R.id.tv_genereal_header_title);
         recylerReport = findViewById(R.id.recylerReport);
-        input_name = findViewById(R.id.input_name);
+        id_value = findViewById(R.id.id_value);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        user = firebaseAuth.getCurrentUser();
-        assert user != null;
-        check = user.getEmail();
-        fbd = FirebaseDatabase.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReferenceStock = FirebaseDatabase.getInstance().getReference("Stock");
+        databaseReferenceProduct = FirebaseDatabase.getInstance().getReference("Product");
 
 
         ivBack.setOnClickListener(new View.OnClickListener() {
@@ -84,36 +98,146 @@ public class ReportActivity extends AutoLogout {
             }
         });
 
-        reportListAdapter = new ReportListAdapter(this, listdata, new ReportListAdapter.OnItemClickListener() {
-            @Override
-            public void onContactSelected(Report item) {
-                DialogCustom.showSuccessMessage(ReportActivity.this, item.getName() + item.getEmail());
+        getProductList();
 
+
+        id_value.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (!DialogCustom.isOnline(ReportActivity.this)) {
+                    DialogCustom.showInternetConnectionMessage(ReportActivity.this);
+                } else {
+
+                    getProductInfo();
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
 
 
+        // getFbddata();
 
-        getFbddata();
 
-        input_name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // Do some thing now
-            }
+    }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                reportListAdapter.getFilter().filter(s);
-            }
+    private void getProductList() {
+        //spinerList.clear();
+        try {
+            spinerList = new ArrayList<>();
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                // Do something at this time
+            listener = databaseReferenceProduct.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot item : dataSnapshot.getChildren()) {
+                        if (item.exists() && item.child("flag").getValue().equals("Y")) {
+                            String id = "" + item.child("productId").getValue();
+                            spinerList.add(id);
+                        }
 
-            }
-        });
 
+                    }
+                    adapter = new ArrayAdapter<String>(ReportActivity.this, android.R.layout.simple_spinner_dropdown_item, spinerList);
+
+                    id_value.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getProductInfo() {
+        if (!DialogCustom.isOnline(ReportActivity.this)) {
+            DialogCustom.showInternetConnectionMessage(ReportActivity.this);
+        } else {
+            //loadingDialog.startDialoglog();
+            Query queryt = databaseReferenceProduct.orderByChild("productId").equalTo(id_value.getSelectedItem().toString().trim());
+            queryt.addValueEventListener(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    //loadingDialog.dismisstDialoglog();
+                    double totalproductQty = 0;
+                    double totalbuyPrice = 0;
+                    double totalsellPrice = 0;
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        Map<String, Object> map = (Map<String, Object>) ds.getValue();
+                        assert map != null;
+                        if (!map.isEmpty() && Objects.equals(map.get("flag"), "Y")) {
+                            Object productName = map.get("productName");
+                            Object productId = map.get("productId");
+                            Object productQty = map.get("productQty");
+                            Object totalPrice = map.get("totalPrice");
+                            Object stockflg = map.get("stockflg");
+                            Object color = map.get("color");
+                            Object date = map.get("date");
+                            try {
+                                double productQtyvalue = Double.parseDouble(String.valueOf(productQty));
+                                totalproductQty += productQtyvalue;
+                                if (stockflg.equals("IN")) {
+                                    double totalbuyvalue = Double.parseDouble(String.valueOf(totalPrice));
+                                    totalbuyPrice += totalbuyvalue;
+                                }
+                                if (stockflg.equals("OUT")) {
+                                    double totalSellvalue = Double.parseDouble(String.valueOf(totalPrice));
+                                    totalsellPrice += totalSellvalue;
+                                }
+
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            Report report = new Report(
+                                    String.valueOf(productName),
+                                    String.valueOf(productId),
+                                    String.valueOf(date),
+                                    String.valueOf(color),
+                                    String.valueOf(totalproductQty),
+                                    String.valueOf(totalbuyPrice),
+                                    String.valueOf(totalsellPrice));
+                            listdata.add(report);
+
+                            reportListAdapter = new ReportListAdapter(ReportActivity.this, listdata, new ReportListAdapter.OnItemClickListener() {
+                                @Override
+                                public void onContactSelected(Report item) {
+                                    // DialogCustom.showSuccessMessage(ReportActivity.this, item.getName() + item.getEmail());
+
+                                }
+                            });
+                            recylerReport.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                            recylerReport.setItemAnimator(new DefaultItemAnimator());
+                            recylerReport.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
+
+                            recylerReport.setHasFixedSize(true);
+                            recylerReport.setAdapter(reportListAdapter);
+                            reportListAdapter.notifyDataSetChanged();
+
+
+                        } else {
+
+                        }
+
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    DialogCustom.showErrorMessage(ReportActivity.this, databaseError.getMessage());
+                }
+            });
+        }
 
 
     }
@@ -121,38 +245,42 @@ public class ReportActivity extends AutoLogout {
     void getFbddata() {
         loadingDialog.startDialoglog();
 
-        reference = fbd.getReference().child("Members");
-        reference.addValueEventListener(new ValueEventListener() {
+
+        databaseReferenceStock.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-
-                    String member_name = ds.child("member_name").getValue(String.class);
+                    String productName = ds.child("productName").getValue(String.class);
+                    String productId = ds.child("productId").getValue(String.class);
                     String date = ds.child("date").getValue(String.class);
-                    String amo = ds.child("amount").getValue(String.class);
-                    String invoice = ds.child("invoiceno").getValue(String.class);
-                    String email = ds.child("email").getValue(String.class);
-                    String nick = ds.child("nick").getValue(String.class);
+                    String color = ds.child("color").getValue(String.class);
+                    String productQty = ds.child("productQty").getValue(String.class);
+                    String buyPrice = ds.child("buyPrice").getValue(String.class);
+                    String sellPrice = ds.child("sellPrice").getValue(String.class);
                     // Log.d("TAG", date + " / "+txn);
-                    Report report = new Report(member_name, date, amo, invoice, email,nick);
+
+                    Report report = new Report(productName, productId, date, color, productQty, buyPrice, sellPrice);
+
+
+                    // Report report = new Report(member_name, date, amo, invoice, email, nick);
                     listdata.add(report);
                     // Log.e("Data--3", listitem.getTxnid());
                     loadingDialog.dismisstDialoglog();
 
                 }
 
-                Collections.sort(listdata, new Comparator<Report>() {
+               /* Collections.sort(listdata, new Comparator<Report>() {
                     @Override
                     public int compare(Report m1, Report m2) {
                         return Integer.compare(ValidationUtil.replacePoet(m1.getNick()), ValidationUtil.replacePoet(m2.getNick()));
                     }
 
-                });
+                });*/
                 reportListAdapter = new ReportListAdapter(ReportActivity.this, listdata, new ReportListAdapter.OnItemClickListener() {
                     @Override
                     public void onContactSelected(Report item) {
-                        DialogCustom.showSuccessMessage(ReportActivity.this, item.getName() + item.getEmail());
+                        //   DialogCustom.showSuccessMessage(ReportActivity.this, item.getName() + item.getEmail());
 
                     }
                 });

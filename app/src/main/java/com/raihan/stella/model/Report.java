@@ -2,71 +2,84 @@ package com.raihan.stella.model;
 
 public class Report {
 
-    String name;
-    String depositAmount;
-    String dueAmount;
-    String dueMonths;
-    String email;
-    String nick;
+    String productName = "";
+    String productId = "";
+    String date = "";
+    String color = "";
+    String productQty = "";
+    String buyPrice = "";
+    String sellPrice = "";
 
 
     public Report() {
+
     }
 
-    public Report(String name, String depositAmount, String dueAmount, String dueMonths, String email,String nick) {
-        this.name = name;
-        this.depositAmount = depositAmount;
-        this.dueAmount = dueAmount;
-        this.dueMonths = dueMonths;
-        this.email = email;
-        this.nick = nick;
+    public Report(String productName, String productId, String date, String color, String productQty, String buyPrice, String sellPrice) {
+        this.productName = productName;
+        this.productId = productId;
+        this.date = date;
+        this.color = color;
+        this.productQty = productQty;
+        this.buyPrice = buyPrice;
+        this.sellPrice = sellPrice;
+
     }
 
-    public String getName() {
-        return name;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
-    public String getDepositAmount() {
-        return depositAmount;
+    public String getProductId() {
+        return productId;
     }
 
-    public void setDepositAmount(String depositAmount) {
-        this.depositAmount = depositAmount;
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
-    public String getDueAmount() {
-        return dueAmount;
+    public String getDate() {
+        return date;
     }
 
-    public void setDueAmount(String dueAmount) {
-        this.dueAmount = dueAmount;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public String getDueMonths() {
-        return dueMonths;
+    public String getColor() {
+        return color;
     }
 
-    public void setDueMonths(String dueMonths) {
-        this.dueMonths = dueMonths;
+    public void setColor(String color) {
+        this.color = color;
     }
 
-    public String getEmail() {
-        return email;
+    public String getProductQty() {
+        return productQty;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setProductQty(String productQty) {
+        this.productQty = productQty;
     }
 
-    public String getNick() {
-        return nick;
+    public String getBuyPrice() {
+        return buyPrice;
     }
 
-    public void setNick(String nick) {
-        this.nick = nick;
+    public void setBuyPrice(String buyPrice) {
+        this.buyPrice = buyPrice;
     }
+
+    public String getSellPrice() {
+        return sellPrice;
+    }
+
+    public void setSellPrice(String sellPrice) {
+        this.sellPrice = sellPrice;
+    }
+
 }
